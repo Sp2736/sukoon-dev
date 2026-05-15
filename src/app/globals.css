@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+:root {
+  --background: #FFFFFF;
+  --foreground: #1F1F1F;
+  /* Sukoon Brand Colors */
+  --color-primary: #52B7EC;
+  --color-primary-light: #D9F2FF;
+  --color-dark: #1F1F1F;
+  --color-gray-text: #919191;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  
+  /* Map Custom Colors */
+  --color-brand-blue: var(--color-primary);
+  --color-brand-light: var(--color-primary-light);
+  --color-brand-dark: var(--color-dark);
+  --color-brand-gray: var(--color-gray-text);
+
+  /* You will need to import these via next/font in layout.tsx */
+  --font-heading: 'Instrument Sans', sans-serif;
+  --font-body: 'Source Sans Pro', sans-serif;
+  --font-quote: 'Mona Sans', sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  /* Default to body font */
+  font-family: var(--font-body); 
+}
+
+/* Building Construction Animation */
+@keyframes construct-building {
+  0% {
+    clip-path: polygon(0 100%, 0 100%, 0 100%, 0 100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    opacity: 1;
+  }
+}
+
+.animate-construct {
+  animation: construct-building 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
