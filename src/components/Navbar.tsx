@@ -2,18 +2,38 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
+
+const navLinks = [
+  { name: "Home", href: "/" },
+  { name: "About Us", href: "/about" },
+  { name: "Property listing", href: "/properties" },
+];
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
+  const pathname = usePathname();
+
+  // 1. Pages that use the "sukoon-color.png" logo (Listings & Details)
+  const isColorLogoPage = pathname.startsWith("/properties");
+
+  // 2. Pages that are solid white immediately (Properties routing)
+  const isSolidWhitePage = pathname.startsWith("/properties");
+
+  // 3. Pages that need White TEXT initially (Contact, About)
+  const isWhiteTextPage = pathname === "/contact" || pathname === "/about";
+
+  // 4. Pages that need a White LOGO initially (Home, Contact, About)
+  const isWhiteLogoPage =
+    pathname === "/" || pathname === "/contact" || pathname === "/about";
+
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  // Track scroll position to change navbar style
   useEffect(() => {
     const handleScroll = () => {
-      // Change state if scrolled past 50px (you can adjust this threshold)
       if (window.scrollY > 800) {
         setIsScrolled(true);
       } else {
@@ -25,10 +45,32 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Determine styles based on scroll state
-  const navBgClass = isScrolled ? "bg-white shadow-sm" : "bg-transparent";
-  const textColorClass = isScrolled ? "text-[#1F1F1F]" : "text-black";
-  const logoSrc = isScrolled ? "/logo-black.png" : "/logo-white.png";
+  const navBgClass =
+    isScrolled || isSolidWhitePage ? "bg-white shadow-sm" : "bg-transparent";
+
+  const textColorClass =
+    isScrolled || isSolidWhitePage
+      ? "text-[#1F1F1F]"
+      : isWhiteTextPage
+        ? "text-white"
+        : "text-[#1F1F1F]";
+
+  // LOGO LOGIC REFACTORED: Color logo overrides everything on Property pages
+  let logoSrc = "/logo-black.png";
+  if (isColorLogoPage) {
+    logoSrc = "/sukoon-color.png";
+  } else if (isScrolled) {
+    logoSrc = "/logo-black.png";
+  } else if (isWhiteLogoPage) {
+    logoSrc = "/logo-white.png";
+  }
+
+  const mobileMenuBg =
+    isScrolled || isSolidWhitePage
+      ? "bg-white"
+      : isWhiteTextPage
+        ? "bg-black/80 backdrop-blur-md"
+        : "bg-white/90 backdrop-blur-md shadow-sm";
 
   return (
     <nav
@@ -37,13 +79,13 @@ export default function Navbar() {
       <div className="flex items-center justify-between px-8 md:px-24 py-4">
         {/* Logo */}
         <div className="flex items-center">
-          <div className="flex flex-col">
+          <Link href="/" className="flex flex-col">
             <img
               src={logoSrc}
               alt="Sukoon Developers"
               className="h-12 w-auto object-contain cursor-pointer transition-all duration-300"
             />
-          </div>
+          </Link>
         </div>
 
         {/* Desktop Navigation */}
@@ -51,29 +93,28 @@ export default function Navbar() {
           <div
             className={`flex items-center gap-8 font-heading text-[15px] ${textColorClass}`}
           >
-            <Link
-              href="/"
-              className="font-medium cursor-pointer hover:opacity-70 transition-opacity"
-            >
-              Home
-            </Link>
-            <Link
-              href="/about"
-              className="font-normal opacity-80 hover:opacity-100 transition-opacity cursor-pointer"
-            >
-              About Us
-            </Link>
-            <Link
-              href="/properties"
-              className="font-normal opacity-80 hover:opacity-100 transition-opacity cursor-pointer"
-            >
-              Property listing
-            </Link>
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href;
+
+              return (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className={`cursor-pointer transition-all duration-300 ${
+                    isActive
+                      ? "font-bold opacity-100"
+                      : "font-normal opacity-80 hover:font-bold hover:opacity-100"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              );
+            })}
           </div>
 
           <Link
             href="/contact"
-            className="bg-[#52B7EC] text-white px-8 py-3 rounded-full font-heading font-semibold text-[14px] hover:brightness-110 transition-all cursor-pointer"
+            className="bg-[#52B7EC] text-white px-8 py-3 rounded-full font-heading font-semibold text-[14px] hover:brightness-110 transition-all cursor-pointer shadow-sm"
           >
             Contact Us
           </Link>
@@ -99,37 +140,28 @@ export default function Navbar() {
             : "-translate-y-2 opacity-0 pointer-events-none"
         }`}
       >
-        {/* The mobile menu uses a solid background to ensure readability regardless of the page background */}
         <ul
-          className={`flex flex-col items-end gap-3 py-4 px-6 rounded-xl shadow-lg border border-gray-100 ${isScrolled ? "bg-white" : "bg-black/80 backdrop-blur-md"}`}
+          className={`flex flex-col items-end gap-3 py-4 px-6 rounded-xl border border-gray-100 ${mobileMenuBg}`}
         >
-          <li>
-            <Link
-              href="/"
-              onClick={toggleMenu}
-              className={`font-heading text-[15px] font-medium cursor-pointer ${textColorClass}`}
-            >
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/about"
-              onClick={toggleMenu}
-              className={`font-heading text-[15px] font-normal cursor-pointer ${textColorClass} opacity-80`}
-            >
-              About Us
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/properties"
-              onClick={toggleMenu}
-              className={`font-heading text-[15px] font-normal cursor-pointer ${textColorClass} opacity-80`}
-            >
-              Property listing
-            </Link>
-          </li>
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href;
+
+            return (
+              <li key={link.name}>
+                <Link
+                  href={link.href}
+                  onClick={toggleMenu}
+                  className={`font-heading text-[15px] cursor-pointer transition-all duration-300 ${textColorClass} ${
+                    isActive
+                      ? "font-bold opacity-100"
+                      : "font-normal opacity-80 hover:font-bold hover:opacity-100"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              </li>
+            );
+          })}
           <li>
             <Link
               href="/contact"
