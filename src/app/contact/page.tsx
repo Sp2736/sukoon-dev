@@ -1,6 +1,4 @@
-import ContactHero from "@/src/components/ContactHero";
-import Footer from "@/src/components/Footer";
-// import Navbar from "@/src/components/Navbar";
+import ContactHero from "@/src/components/contact/ContactHero";
 
 export default function ContactPage() {
   return (
@@ -27,9 +25,6 @@ export default function ContactPage() {
           </div>
         </div>
       </section>
-
-      {/* 3. The Footer Section (Contains the CTA & Links) */}
-      {/* <Footer /> */}
     </main>
   );
 }

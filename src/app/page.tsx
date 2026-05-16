@@ -1,9 +1,9 @@
-import HeroSection from "@/src/components/HeroSection";
-import AboutSection from "@/src/components/AboutSection";
-import InvestorCategories from "@/src/components/InvestorCategories";
-import LandOpportunities from "@/src/components/LandOpportunities";
-import Testimonials from "@/src/components/Testimonials";
-import WhyChooseUs from "@/src/components/WhyChooseUs";
+import HeroSection from "@/src/components/home/HeroSection";
+import AboutSection from "@/src/components/home/AboutSection";
+import InvestorCategories from "@/src/components/home/InvestorCategories";
+import LandOpportunities from "@/src/components/home/LandOpportunities";
+import Testimonials from "@/src/components/home/Testimonials";
+import WhyChooseUs from "@/src/components/home/WhyChooseUs";
 
 export default function Home() {
   return (

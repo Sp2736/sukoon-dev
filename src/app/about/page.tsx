@@ -1,17 +1,17 @@
-import AboutHero from "@/src/components/AboutHero";
-import WelcomeSection from "@/src/components/WelcomeSection";
-import VisionSection from "@/src/components/VisionSection";
-import MissionSection from "@/src/components/MissionSection";
-import WhyChooseUsSection from "@/src/components/WhyChooseUsSection";
+import AboutHero from "@/src/components/about/AboutHero";
+import WhoWeAre from "@/src/components/about/WhoWeAre";
+import VisionAndApproach from "@/src/components/about/VisionAndApproach";
+import InvestmentNetwork from "@/src/components/about/InvestmentNetwork";
+import WhyInvestorsChooseUs from "@/src/components/about/WhyInvestorsChooseUs";
 
 export default function AboutPage() {
   return (
-    <main className="w-full bg-white flex flex-col min-h-screen">
+    <main className="min-h-screen">
       <AboutHero />
-      <WelcomeSection />
-      <VisionSection />
-      <MissionSection />
-      <WhyChooseUsSection />
+      <WhoWeAre />
+      <VisionAndApproach />
+      <InvestmentNetwork />
+      <WhyInvestorsChooseUs />
     </main>
   );
 }
