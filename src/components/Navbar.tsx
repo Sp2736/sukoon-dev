@@ -21,10 +21,10 @@ export default function Navbar() {
   const isColorLogoPage = pathname.startsWith("/properties");
 
   // 2. Pages that are solid white immediately (Properties routing)
-  const isSolidWhitePage = pathname.startsWith("/properties");
+  // const isSolidWhitePage = pathname.startsWith("/properties");
 
   // 3. Pages that need White TEXT initially (Contact, About)
-  const isWhiteTextPage = pathname === "/contact" || pathname === "/about";
+  const isWhiteTextPage = pathname === "/contact" || pathname === "/about" || pathname.startsWith("/properties");
 
   // 4. Pages that need a White LOGO initially (Home, Contact, About)
   const isWhiteLogoPage =
@@ -34,7 +34,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 800) {
+      if (window.scrollY > 80) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
@@ -46,27 +46,28 @@ export default function Navbar() {
   }, []);
 
   const navBgClass =
-    isScrolled || isSolidWhitePage ? "bg-white shadow-sm" : "bg-transparent";
+    isScrolled ? "bg-white shadow-sm" : "bg-transparent";
 
   const textColorClass =
-    isScrolled || isSolidWhitePage
+    isScrolled
       ? "text-[#1F1F1F]"
       : isWhiteTextPage
-        ? "text-white"
+        ? pathname.startsWith("/properties") 
+          ? "text-black" : "text-white"
         : "text-[#1F1F1F]";
 
   // LOGO LOGIC REFACTORED: Color logo overrides everything on Property pages
-  let logoSrc = "/logo-black.png";
+  let logoSrc = "/sukoon-color.png";
   if (isColorLogoPage) {
     logoSrc = "/sukoon-color.png";
   } else if (isScrolled) {
-    logoSrc = "/logo-black.png";
+    logoSrc = "/sukoon-color.png";
   } else if (isWhiteLogoPage) {
     logoSrc = "/logo-white.png";
   }
 
   const mobileMenuBg =
-    isScrolled || isSolidWhitePage
+    isScrolled
       ? "bg-white"
       : isWhiteTextPage
         ? "bg-black/80 backdrop-blur-md"
@@ -102,8 +103,8 @@ export default function Navbar() {
                   href={link.href}
                   className={`cursor-pointer transition-all duration-300 ${
                     isActive
-                      ? "font-bold opacity-100"
-                      : "font-normal opacity-80 hover:font-bold hover:opacity-100"
+                      ? "font-semibold opacity-100"
+                      : "font-normal opacity-80 hover:font-semibold hover:opacity-100"
                   }`}
                 >
                   {link.name}

@@ -2,6 +2,7 @@ import PropertyCard from "./PropertyCard";
 import { ArrowRight } from "lucide-react";
 
 interface PropertyItem {
+  id:string;
   image: string;
   title: string;
   location: string;
@@ -44,6 +45,7 @@ export default function PropertySection({
           {properties.map((prop, index) => (
             <PropertyCard
               key={index}
+              id={prop.id}
               image={prop.image}
               title={prop.title}
               location={prop.location}
