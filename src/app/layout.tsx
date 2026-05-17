@@ -5,28 +5,26 @@ import Footer from "@/src/components/Footer"
 import "./globals.css";
 import SmoothScroll from "../components/SmoothScroll";
 
-// Configure the fonts based on your Figma design
-const instrumentSans = Instrument_Sans({ 
-  subsets: ["latin"], 
-  variable: "--font-heading" 
+// Define the fonts and map them to CSS variables
+const instrumentSans = Instrument_Sans({
+  subsets: ['latin'],
+  variable: '--font-instrument-sans',
+  display: 'swap',
 });
 
-const sourceSans = Source_Sans_3({ 
-  subsets: ["latin"], 
-  variable: "--font-body" 
+const sourceSans = Source_Sans_3({
+  subsets: ['latin'],
+  variable: '--font-source-sans',
+  display: 'swap',
 });
-
-export const metadata: Metadata = {
-  title: "Sukoon Developers",
-  description: "Build, Invest & Grow with Us in Gujarat.",
-};
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
+    // Inject the variables into the HTML class
     <html lang="en">
       <body className={`${instrumentSans.variable} ${sourceSans.variable} font-body antialiased bg-background text-foreground`}>
         <SmoothScroll>

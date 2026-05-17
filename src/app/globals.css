@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+@theme {
+  --font-heading: var(--font-instrument-sans);
+  --font-body: var(--font-source-sans);
+}
+
 :root {
   --background: #FFFFFF;
   --foreground: #1F1F1F;
@@ -50,4 +55,32 @@ body {
 
 .animate-construct {
   animation: construct-building 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* --- ROAD TRAIL ANIMATION --- */
+.road-trail-animation {
+  stroke-dashoffset: 1000;
+  animation: roadFlow 8s linear infinite;
+}
+
+@keyframes roadFlow {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* --- PIN REVEAL ANIMATION --- */
+@keyframes revealPin {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -80%) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -100%) scale(1);
+  }
+}
+
+.animate-revealPin {
+  animation: revealPin 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
