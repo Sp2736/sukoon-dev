@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useRef, useEffect } from "react";
 import {
   Building,
   Maximize,
@@ -30,18 +33,64 @@ export default function PropertyDetailHero({
   location,
   price,
   bhk,
-  images,
+  images = [],
 }: PropertyDetailHeroProps) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
+  const thumbRefs = useRef<(HTMLImageElement | null)[]>([]);
+
+  // Fallback if no images are provided
+  const displayImages = images.length > 0 ? images : ["/sukoon-color.png"];
+
+  // Navigation Logic with Looping
+  const nextSlide = () => {
+    setActiveIndex((prev) => (prev + 1) % displayImages.length);
+  };
+
+  const prevSlide = () => {
+    setActiveIndex(
+      (prev) => (prev - 1 + displayImages.length) % displayImages.length,
+    );
+  };
+
+  // Effect to calculate the position of the sliding "window"
+  useEffect(() => {
+    const updateIndicator = () => {
+      const activeThumb = thumbRefs.current[activeIndex];
+      if (activeThumb) {
+        // Update the slider box to perfectly match the active thumbnail's position and width
+        setIndicatorStyle({
+          left: activeThumb.offsetLeft,
+          width: activeThumb.offsetWidth,
+        });
+
+        // Smoothly scroll the thumbnail list to keep the active item in view
+        activeThumb.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "center",
+        });
+      }
+    };
+
+    updateIndicator();
+
+    // Recalculate if the window size changes
+    window.addEventListener("resize", updateIndicator);
+    return () => window.removeEventListener("resize", updateIndicator);
+  }, [activeIndex, displayImages]);
+
   return (
     <section className="w-full bg-white px-6 md:px-16 lg:px-[100px] pb-[80px]">
       <div className="max-w-[1920px] mx-auto flex flex-col lg:flex-row gap-8 lg:gap-12">
         {/* LEFT COLUMN: Image Gallery (Approx 55% width) */}
         <div className="w-full lg:w-[55%] flex flex-col gap-4">
           {/* Main Giant Image */}
-          <div className="w-full h-[400px] md:h-[500px] lg:h-[550px] rounded-[24px] overflow-hidden">
+          <div className="w-[90%] h-[300px] md:h-[400px] lg:h-[450px] rounded-[15px] overflow-hidden bg-gray-100 relative">
             <img
-              src={images[0]}
-              alt={title}
+              key={activeIndex} // Key forces a re-render for a subtle snap, optional: add fade animations here
+              src={displayImages[activeIndex]}
+              alt={`${title} - Photo ${activeIndex + 1}`}
               className="w-full h-full object-cover"
             />
           </div>
@@ -49,39 +98,59 @@ export default function PropertyDetailHero({
           {/* Bottom Thumbnails & Controls */}
           <div className="flex items-center gap-3 md:gap-4 w-full h-[100px] md:h-[120px]">
             {/* Left Arrow */}
-            <button className="w-[40px] h-[40px] md:w-[50px] md:h-[50px] shrink-0 rounded-full border border-gray-200 flex items-center justify-center text-[#1F1F1F] hover:bg-gray-50 transition-colors">
+            <button
+              onClick={prevSlide}
+              className="w-[40px] h-[40px] md:w-[50px] md:h-[50px] shrink-0 rounded-full border border-gray-200 flex items-center justify-center text-[#1F1F1F] hover:bg-gray-50 transition-colors z-10"
+            >
               <ArrowLeft size={20} />
             </button>
 
-            {/* 3 Thumbnails filling the space */}
-            <div className="flex-1 flex gap-3 md:gap-4 h-full">
-              <img
-                src={images[1] || images[0]}
-                alt="Thumbnail 1"
-                className="w-1/3 h-full object-cover rounded-[16px]"
-              />
-              <img
-                src={images[2] || images[0]}
-                alt="Thumbnail 2"
-                className="w-1/3 h-full object-cover rounded-[16px]"
-              />
-              <img
-                src={images[3] || images[0]}
-                alt="Thumbnail 3"
-                className="w-1/3 h-full object-cover rounded-[16px]"
-              />
+            {/* Scrollable Thumbnails Container */}
+            <div className="flex-1 relative h-full overflow-hidden">
+              <div className="flex gap-3 md:gap-4 h-full w-full overflow-x-auto overflow-y-hidden scroll-smooth relative items-center [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                {/* The Sliding Magic Window / Border */}
+                <div
+                  className="absolute top-0 bottom-0 z-10 pointer-events-none transition-all duration-300 ease-out border-[3px] border-[#52B7EC] rounded-[5px] shadow-[0_0_15px_rgba(82,183,236,0.3)] bg-[#52B7EC]/10"
+                  style={{
+                    left: `${indicatorStyle.left}px`,
+                    width: `${indicatorStyle.width}px`,
+                    height: "100%",
+                  }}
+                />
+
+                {/* Thumbnail Images */}
+                {displayImages.map((src, idx) => (
+                  <img
+                    key={idx}
+                    ref={(el) => {
+                      thumbRefs.current[idx] = el;
+                    }}
+                    src={src}
+                    alt={`Thumbnail ${idx + 1}`}
+                    onClick={() => setActiveIndex(idx)}
+                    // Making them roughly 1/3rd width minus gap, but allowing them to shrink slightly
+                    className={`w-[30%] md:w-[31%] shrink-0 h-full object-cover rounded-[5px] cursor-pointer transition-opacity duration-300 ${
+                      activeIndex !== idx
+                        ? "opacity-60 hover:opacity-100"
+                        : "opacity-100"
+                    }`}
+                  />
+                ))}
+              </div>
             </div>
 
             {/* Right Arrow */}
-            <button className="w-[40px] h-[40px] md:w-[50px] md:h-[50px] shrink-0 rounded-full bg-[#D9F2FF] flex items-center justify-center text-[#52B7EC] hover:brightness-95 transition-all">
+            <button
+              onClick={nextSlide}
+              className="w-[40px] h-[40px] md:w-[50px] md:h-[50px] shrink-0 rounded-full bg-[#D9F2FF] flex items-center justify-center text-[#52B7EC] hover:brightness-95 transition-all z-10"
+            >
               <ArrowRight size={20} />
             </button>
           </div>
         </div>
-
         {/* RIGHT COLUMN: Property Details Card (Approx 45% width) */}
-        <div className="w-full lg:w-[45%] bg-[#F4FAFD] border border-[#D9F2FF]/50 rounded-[24px] p-8 md:p-10 flex flex-col h-fit">
-          <h1 className="font-heading font-bold text-[36px] md:text-[42px] text-[#1F1F1F] leading-tight mb-8">
+        <div className="w-full lg:w-[45%] bg-[#D9F2FF80] border border-[#D9F2FF]/50 rounded-[16px] p-7 md:p-8 flex flex-col">
+          <h1 className="font-heading font-bold text-[32px] md:text-[38px] text-[#1F1F1F] leading-tight mb-5">
             {title}
           </h1>
 
@@ -89,10 +158,16 @@ export default function PropertyDetailHero({
             {/* Row 1: Property Type */}
             <div className="flex justify-between items-center py-4 border-b border-[#D9F2FF]">
               <div className="flex items-center gap-3 text-[#919191]">
-                <Building size={20} strokeWidth={1.5} />
-                <span className="font-body text-[16px]">Property Type :</span>
+                <img
+                  src="/details-type.png"
+                  alt="Property Type"
+                  className="w-[18px] h-[18px] object-contain opacity-80 shrink-0"
+                />
+
+                <span className="font-body text-[14px]">Property Type :</span>
               </div>
-              <span className="font-heading font-medium text-[18px] text-[#1F1F1F]">
+
+              <span className="font-heading font-medium text-[20px] text-[#1F1F1F] text-right">
                 {propertyType}
               </span>
             </div>
@@ -100,10 +175,14 @@ export default function PropertyDetailHero({
             {/* Row 2: Area */}
             <div className="flex justify-between items-center py-4 border-b border-[#D9F2FF]">
               <div className="flex items-center gap-3 text-[#919191]">
-                <Maximize size={20} strokeWidth={1.5} />
-                <span className="font-body text-[16px]">Area (sq ft) :</span>
+                <img
+                  src="/details-area.png"
+                  alt="Property Type"
+                  className="w-[18px] h-[18px] object-contain opacity-80 shrink-0"
+                />{" "}
+                <span className="font-body text-[14px]">Area (sq ft) :</span>
               </div>
-              <span className="font-heading font-medium text-[18px] text-[#1F1F1F]">
+              <span className="font-heading font-medium text-[20px] text-[#1F1F1F] text-right">
                 {area}
               </span>
             </div>
@@ -111,10 +190,14 @@ export default function PropertyDetailHero({
             {/* Row 3: Location */}
             <div className="flex justify-between items-center py-4 border-b border-[#D9F2FF]">
               <div className="flex items-center gap-3 text-[#919191]">
-                <MapPin size={20} strokeWidth={1.5} />
-                <span className="font-body text-[16px]">Location :</span>
+                <img
+                  src="/details-location.png"
+                  alt="Property Type"
+                  className="w-[18px] h-[18px] object-contain opacity-80 shrink-0"
+                />{" "}
+                <span className="font-body text-[14px]">Location :</span>
               </div>
-              <span className="font-heading font-medium text-[18px] text-[#1F1F1F]">
+              <span className="font-heading font-medium text-[20px] text-[#1F1F1F] text-right">
                 {location}
               </span>
             </div>
@@ -122,10 +205,14 @@ export default function PropertyDetailHero({
             {/* Row 4: Expected Price */}
             <div className="flex justify-between items-center py-4 border-b border-[#D9F2FF]">
               <div className="flex items-center gap-3 text-[#919191]">
-                <Tags size={20} strokeWidth={1.5} />
-                <span className="font-body text-[16px]">Expected Price :</span>
+                <img
+                  src="/details-price.png"
+                  alt="Property Type"
+                  className="w-[18px] h-[18px] object-contain opacity-80 shrink-0"
+                />{" "}
+                <span className="font-body text-[14px]">Expected Price :</span>
               </div>
-              <span className="font-heading font-medium text-[18px] text-[#1F1F1F]">
+              <span className="font-heading font-medium text-[20px] text-[#1F1F1F] text-right">
                 {price}
               </span>
             </div>
@@ -133,62 +220,86 @@ export default function PropertyDetailHero({
             {/* Row 5: BHK Type */}
             <div className="flex justify-between items-center py-4 border-b border-[#D9F2FF]">
               <div className="flex items-center gap-3 text-[#919191]">
-                <BedSingle size={20} strokeWidth={1.5} />
-                <span className="font-body text-[16px]">BHK Type :</span>
+                <img
+                  src="/details-bhk.png"
+                  alt="Property Type"
+                  className="w-[18px] h-[18px] object-contain opacity-80 shrink-0"
+                />{" "}
+                <span className="font-body text-[14px]">BHK Type :</span>
               </div>
-              <span className="font-heading font-medium text-[18px] text-[#1F1F1F]">
+              <span className="font-heading font-medium text-[20px] text-[#1F1F1F] text-right">
                 {bhk}
               </span>
             </div>
           </div>
 
           {/* Project Amenities */}
-          <div className="mt-8">
+          <div className="mt-3">
             <h3 className="font-heading font-bold text-[18px] text-[#1F1F1F] mb-6">
               Project Amenities :
             </h3>
 
-            <div className="flex justify-between items-center w-full">
+            <div className="flex justify-between items-center w-full overflow-x-auto pb-4 md:pb-0 gap-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
               {/* Icon 1 */}
-              <div className="flex flex-col items-center gap-2">
+              <div className="flex flex-col items-center gap-2 shrink-0">
                 <div className="w-[50px] h-[50px] rounded-full border border-[#919191]/50 flex items-center justify-center text-[#919191]">
-                  <Dumbbell size={20} strokeWidth={1.5} />
+                  <img
+                    src="/amenities-gym.png"
+                    alt="Gymnasium"
+                    className="w-[20px] h-[20px] object-contain opacity-80"
+                  />
                 </div>
-                <span className="font-body text-[12px] font-medium text-[#1F1F1F]">
+                <span className="font-body text-[12px] font-medium text-[#1F1F1F] text-center">
                   Gymnasium
                 </span>
               </div>
               {/* Icon 2 */}
-              <div className="flex flex-col items-center gap-2">
+              <div className="flex flex-col items-center gap-2 shrink-0">
                 <div className="w-[50px] h-[50px] rounded-full border border-[#919191]/50 flex items-center justify-center text-[#919191]">
-                  <Waves size={20} strokeWidth={1.5} />
+                  <img
+                    src="/amenities-pool.png"
+                    alt="Gymnasium"
+                    className="w-[20px] h-[20px] object-contain opacity-80"
+                  />{" "}
                 </div>
                 <span className="font-body text-[12px] font-medium text-[#1F1F1F]">
                   Swimming Pool
                 </span>
               </div>
               {/* Icon 3 */}
-              <div className="flex flex-col items-center gap-2">
+              <div className="flex flex-col items-center gap-2 shrink-0">
                 <div className="w-[50px] h-[50px] rounded-full border border-[#919191]/50 flex items-center justify-center text-[#919191]">
-                  <Armchair size={20} strokeWidth={1.5} />
+                  <img
+                    src="/amenities-living.png"
+                    alt="Gymnasium"
+                    className="w-[20px] h-[20px] object-contain opacity-80"
+                  />{" "}
                 </div>
                 <span className="font-body text-[12px] font-medium text-[#1F1F1F]">
                   Living Room
                 </span>
               </div>
               {/* Icon 4 */}
-              <div className="flex flex-col items-center gap-2">
+              <div className="flex flex-col items-center gap-2 shrink-0">
                 <div className="w-[50px] h-[50px] rounded-full border border-[#919191]/50 flex items-center justify-center text-[#919191]">
-                  <Zap size={20} strokeWidth={1.5} />
+                  <img
+                    src="/amenities-power.png"
+                    alt="Gymnasium"
+                    className="w-[20px] h-[20px] object-contain opacity-80"
+                  />{" "}
                 </div>
                 <span className="font-body text-[12px] font-medium text-[#1F1F1F]">
                   Power Backup
                 </span>
               </div>
               {/* Icon 5 */}
-              <div className="flex flex-col items-center gap-2">
+              <div className="flex flex-col items-center gap-2 shrink-0">
                 <div className="w-[50px] h-[50px] rounded-full border border-[#919191]/50 flex items-center justify-center text-[#919191]">
-                  <Utensils size={20} strokeWidth={1.5} />
+                  <img
+                    src="/amenities-dining.png"
+                    alt="Gymnasium"
+                    className="w-[20px] h-[20px] object-contain opacity-80"
+                  />{" "}
                 </div>
                 <span className="font-body text-[12px] font-medium text-[#1F1F1F]">
                   Dining Area

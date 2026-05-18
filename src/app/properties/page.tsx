@@ -1,165 +1,98 @@
 import PropertySection from "@/src/components/properties/PropertySection";
 
-const propertyData = [
-  {
-    title: "Residential",
-    properties: [
-      {
-        id:"res-1",
-        image: "/plot-1-1.png",
-        title: "Green Valley Home",
-        location: "Deepali nagar, Vadodara",
-        details: "2, 3 BHK",
-        price: "₹45.6 L - 69.7 L",
-      },
-      {
-        id:"res-2",
-        image: "/plot-1-2.png",
-        title: "Luxury Villas in Alkapuri",
-        location: "Alkapuri, Vadodara",
-        details: "4 BHK",
-        price: "₹ 3.5 Cr Onwards",
-      },
-      {
-        id:"res-3",
-        image: "/plot-1-3.png",
-        title: "Premium Apartments",
-        location: "Gotri, Vadodara",
-        details: "3 BHK",
-        price: "₹ 85 Lacs Onwards",
-      },
-    ],
-  },
-  {
-    title: "Commercial",
-    properties: [
-      {
-        id:"comm-1",
-        image: "/plot-2-1.png",
-        title: "Lotus Business Hub",
-        location: "RC Dutt Road, Vadodara",
-        details: "Office Space",
-        price: "₹ 1.2 Cr Onwards",
-      },
-      {
-        id:"comm-2",
-        image: "/plot-2-2.png",
-        title: "Retail Spaces in Veda",
-        location: "Vasna Road, Vadodara",
-        details: "Retail",
-        price: "₹ 90 Lacs Onwards",
-      },
-      {
-        id:"comm-3",
-        image: "/plot-2-3.png",
-        title: "Corporate IT Park",
-        location: "Sayajigunj, Vadodara",
-        details: "Office Space",
-        price: "₹ 5.5 Cr Onwards",
-      },
-    ],
-  },
-  {
-    title: "Industrial",
-    properties: [
-      {
-        id:"ind-1",
-        image: "/plot-3-1.png",
-        title: "Makarpura Industrial Shed",
-        location: "Makarpura GIDC, Vadodara",
-        details: "Shed",
-        price: "₹ 4.5 Cr Onwards",
-      },
-      {
-        id:"ind-2",
-        image: "/plot-3-2.png",
-        title: "Logistics Warehouse",
-        location: "Halol Highway, Vadodara",
-        details: "Warehouse",
-        price: "₹ 8.0 Cr Onwards",
-      },
-      {
-        id:"ind-3",
-        image: "/plot-3-3.png",
-        title: "Savli Industrial Plot",
-        location: "Savli GIDC, Vadodara",
-        details: "Plot",
-        price: "₹ 12.0 Cr Onwards",
-      },
-    ],
-  },
-  {
-    title: "Agricultural Land",
-    properties: [
-      {
-        id:"agri-1",
-        image: "/plot-4-1.png",
-        title: "Prime Farm Land",
-        location: "Dabhoi, Gujarat",
-        details: "10 Vigha",
-        price: "₹ 25 Lacs / Vigha",
-      },
-      {
-        id:"agri-2",
-        image: "/plot-4-2.png",
-        title: "Fertile Land Near Karjan",
-        location: "Karjan, Gujarat",
-        details: "25 Vigha",
-        price: "₹ 18 Lacs / Vigha",
-      },
-      {
-        id:"agri-3",
-        image: "/plot-4-3.png",
-        title: "Agricultural Plot",
-        location: "Padra, Gujarat",
-        details: "15 Vigha",
-        price: "₹ 22 Lacs / Vigha",
-      },
-    ],
-  },
-  {
-    title: "Non-Agricultural Land",
-    properties: [
-      {
-        id:"non-agro-1",
-        image: "/plot-5-1.png",
-        title: "Residential N.A. Plot",
-        location: "Sevasi, Vadodara",
-        details: "5000 Sq.Ft.",
-        price: "₹ 1.5 Cr Onwards",
-      },
-      {
-        id:"non-agro-2",
-        image: "/plot-5-2.png",
-        title: "Commercial N.A. Land",
-        location: "Waghodia Road, Vadodara",
-        details: "15,000 Sq.Ft.",
-        price: "₹ 4.5 Cr Onwards",
-      },
-      {
-        id:"non-agro-3",
-        image: "/plot-5-3.png",
-        title: "Mixed-Use N.A. Parcel",
-        location: "Ajwa Road, Vadodara",
-        details: "20,000 Sq.Ft.",
-        price: "₹ 5.0 Cr Onwards",
-      },
-    ],
-  },
-];
+// Next.js config to revalidate the page every 60 seconds
+export const revalidate = 60;
 
-export default function PropertiesPage() {
+interface ApiProperty {
+  public_id: string;
+  cover_image: string;
+  title: string;
+  city: string;
+  configuration: string;
+  price: number;
+  category: string;
+}
+
+async function fetchProperties() {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const apiKey = process.env.SUKOON_API_KEY;
+
+  try {
+    // Fetching with a high limit to get all properties for grouping
+    const res = await fetch(`${apiUrl}/api/properties?limit=100`, {
+      headers: {
+        // Adjust this header key based on what validateApiKey() expects in your backend
+        Authorization: `Bearer ${apiKey}`,
+        "x-api-key": apiKey || "",
+      },
+      next: { revalidate: 60 },
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch properties");
+
+    const json = await res.json();
+    return (json.data || []) as ApiProperty[];
+  } catch (error) {
+    console.error("Error fetching properties:", error);
+    return [];
+  }
+}
+
+export default async function PropertiesPage() {
+  const properties = await fetchProperties();
+
+  // Your predefined categories, now including Industrial
+  const categories = [
+    "Residential",
+    "Commercial",
+    "Industrial",
+    "Agricultural Land",
+    "Non-agricultural Land",
+  ];
+
+  // Group the flat API data into sections
+  const groupedData = categories.map((category) => {
+    return {
+      title: category,
+      properties: properties
+        .filter((p) => p.category === category)
+        .map((p) => ({
+          id: p.public_id, // Important: Passes the dynamic ID to the card
+          image: p.cover_image || "/sukoon-color.png", // Fallback image
+          title: p.title,
+          location: p.city || "Gujarat",
+          details: p.configuration || "Details on request",
+          price: p.price
+            ? `₹ ${p.price.toLocaleString("en-IN")}`
+            : "Price on Request",
+        })),
+    };
+  });
+
   return (
-    // pt-[90px] perfectly offsets your solid white navbar so there is no huge dead space!
     <main className="w-full bg-white flex flex-col min-h-screen pt-[90px]">
-      {propertyData.map((section, index) => (
-        <PropertySection
-          key={index}
-          title={section.title}
-          properties={section.properties}
-          isAlternateBg={index % 2 !== 0}
-        />
-      ))}
+      {groupedData.map((section, index) => {
+        // Only render the section if it actually has properties
+        if (section.properties.length === 0) return null;
+
+        return (
+          <PropertySection
+            key={index}
+            title={section.title}
+            properties={section.properties}
+            isAlternateBg={index % 2 !== 0}
+          />
+        );
+      })}
+
+      {/* Fallback if database is empty or API is unreachable */}
+      {properties.length === 0 && (
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <p className="text-gray-500 font-medium text-lg">
+            No properties found at the moment.
+          </p>
+        </div>
+      )}
     </main>
   );
 }

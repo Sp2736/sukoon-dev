@@ -1,5 +1,9 @@
 import React from "react";
 import Image from "next/image";
+import { Instrument_Sans, Source_Sans_3 } from "next/font/google";
+
+const instrument = Instrument_Sans({ subsets: ["latin"] });
+const source = Source_Sans_3({ subsets: ["latin"] });
 
 export default function WhyInvestorsChooseUs() {
   const cards = [
@@ -65,12 +69,12 @@ export default function WhyInvestorsChooseUs() {
     <section className="bg-[#F7F7F7] w-full pt-[80px] lg:pt-[110px] pb-[80px] lg:pb-[120px] px-6 lg:px-[90px]">
       <div className="max-w-[1700px] mx-auto flex flex-col items-center">
         {/* MAIN HEADING */}
-        <h2 className="font-heading text-[#1E1E1E] font-bold text-[38px] lg:text-[50px] leading-[1.1] lg:leading-[1.08] tracking-[-1px] text-center max-w-[900px]">
+        <h2 className="font-heading text-[#1E1E1E] font-bold text-[32px] lg:text-[40px] leading-[1.1] lg:leading-[1.08] tracking-[-1px] text-center max-w-[900px]">
           Why Investors Choose Us
         </h2>
 
         {/* DESCRIPTION TEXT */}
-        <p className="font-body text-[#333333] font-normal text-[16px] lg:text-[18px] leading-[1.6] lg:leading-[1.7] text-center max-w-[800px] mt-[16px] lg:mt-[20px]">
+        <p className={`${source.className} font-body text-[#333333] font-normal text-[15px] lg:text-[19px] leading-[1.6] lg:leading-[1.7] text-center max-w-[800px] mt-[16px] lg:mt-[20px]`}>
           Discover what makes us the trusted choice for buyers, investors,
           <br className="hidden sm:block" /> and businesses seeking the right
           property opportunities
@@ -81,19 +85,19 @@ export default function WhyInvestorsChooseUs() {
           {cards.map((card, index) => (
             <div
               key={index}
-              className="bg-[#EEF5F7] border border-[rgba(0,0,0,0.06)] rounded-[30px] p-[28px] lg:p-[34px_30px] h-full w-full max-w-[409px] flex flex-col items-start text-left transition-shadow hover:shadow-sm"
+              className="bg-[#D9F2FF4D] border border-[rgba(0,0,0,0.06)] rounded-[20px] p-[15px] lg:p-[20px_20px] h-full w-full max-w-[420px] flex flex-col items-start text-left transition-shadow hover:shadow-sm"
             >
               {/* Icon Container */}
-              <div className="relative w-[44px] h-[44px] lg:w-[50px] lg:h-[50px] text-[#59B8EA] mb-[16px] lg:mb-[20px] flex-shrink-0">
+              <div className="relative w-[44px] h-[44px] lg:w-[45px] lg:h-[45px] text-[#59B8EA] mb-[16px] lg:mb-[20px] flex-shrink-0">
                 {card.icon}
               </div>
 
               {/* Text pushed to the bottom */}
               <div className="flex flex-col mt-10 w-full">
-                <h3 className="font-heading text-[#1E1E1E] font-bold text-[20px] lg:text-[19px] leading-[1.3] mb-[8px]">
+                <h3 className="font-heading text-[#1E1E1E] font-bold text-[16px] lg:text-[19px] leading-[1.3] mb-[8px]">
                   {card.title}
                 </h3>
-                <p className="font-body text-[#8B8B8B] font-normal text-[10px] lg:text-[13px] leading-[1.6]">
+                <p className={`${source.className} font-body text-[#8B8B8B] font-normal text-[10px] lg:text-[14px] leading-[1.6]`}>
                   {card.description}
                 </p>
               </div>

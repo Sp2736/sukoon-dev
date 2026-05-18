@@ -1,6 +1,10 @@
 "use client";
 
 import { Phone, Mail, MapPin } from "lucide-react";
+import { Instrument_Sans, Source_Sans_3 } from "next/font/google";
+
+const instrument = Instrument_Sans({ subsets: ["latin"] });
+const source = Source_Sans_3({ subsets: ["latin"] });
 
 export default function ContactHero() {
   return (
@@ -30,13 +34,13 @@ export default function ContactHero() {
             Let’s Connect
           </h1>
 
-          <p className="font-body font-normal text-[16px] md:text-[18px] text-white/90 leading-[1.6] max-w-[480px] mb-[48px]">
+          <p className={`${source.className} font-body font-normal text-[16px] md:text-[18px] text-white/90 leading-[1.6] max-w-[480px] mb-[48px]`}>
             Have questions about properties or investments? Our team is here to
             help you find the right opportunity
           </p>
 
           {/* Contact Details List */}
-          <div className="flex flex-col gap-6 font-body text-[15px] text-white/90 mb-[56px]">
+          <div className={`${instrument.className} flex flex-col gap-6 font-body text-[16px] text-white/90 mb-[56px]`}>
             <a
               href="tel:+919825444603"
               className="flex items-center gap-4 hover:text-[#52B7EC] transition-colors duration-300"
@@ -74,7 +78,7 @@ export default function ContactHero() {
 
           {/* Social Links */}
           <div className="flex flex-col gap-4">
-            <span className="font-body font-medium text-[15px] text-white">
+            <span className={`${instrument.className} font-body font-medium text-[15px] text-white`}>
               Follow Us
             </span>
             <div className="flex items-center gap-6">
@@ -135,43 +139,43 @@ export default function ContactHero() {
 
         {/* --- RIGHT COLUMN: Minimalist Form Card --- */}
         <div className="w-full lg:w-[48%] max-w-[600px]">
-          <div className="bg-white rounded-[24px] p-5 md:p-[24px] shadow-2xl">
+          <div className="bg-white rounded-[22px] p-5 md:p-[24px] shadow-2xl">
             <h2 className="font-heading font-semibold text-[#303030] text-[26px] md:text-[26px] mb-[32px]">
               Send Us a Message
             </h2>
 
             <form
-              className="flex flex-col gap-6"
+              className={`flex flex-col gap-6`}
               onSubmit={(e) => e.preventDefault()}
             >
               {/* Name */}
               <input
                 type="text"
                 placeholder="Name"
-                className="w-full border-b border-gray-200 bg-transparent py-3 text-[15px] font-body text-[#1F1F1F] placeholder-gray-400 focus:outline-none focus:border-[#52B7EC] transition-colors"
+                className={`${source.className} w-full border-b border-gray-200 bg-transparent py-3 text-[18px] font-body text-[#1F1F1F] placeholder-gray-400 focus:outline-none focus:border-[#52B7EC] transition-colors`}
               />
 
               {/* Email */}
               <input
                 type="email"
                 placeholder="Email Address"
-                className="w-full border-b border-gray-200 bg-transparent py-3 text-[15px] font-body text-[#1F1F1F] placeholder-gray-400 focus:outline-none focus:border-[#52B7EC] transition-colors"
+                className={`${source.className} w-full border-b border-gray-200 bg-transparent py-3 text-[18px] font-body text-[#1F1F1F] placeholder-gray-400 focus:outline-none focus:border-[#52B7EC] transition-colors`}
               />
 
               {/* Phone */}
               <input
                 type="tel"
                 placeholder="Phone Number"
-                className="w-full border-b border-gray-200 bg-transparent py-3 text-[15px] font-body text-[#1F1F1F] placeholder-gray-400 focus:outline-none focus:border-[#52B7EC] transition-colors"
+                className={`${source.className} w-full border-b border-gray-200 bg-transparent py-3 text-[18px] font-body text-[#1F1F1F] placeholder-gray-400 focus:outline-none focus:border-[#52B7EC] transition-colors`}
               />
 
               {/* Property Type Dropdown */}
               <div className="relative">
                 <select
-                  className="w-full border-b border-gray-200 bg-transparent py-3 text-[15px] font-body text-gray-400 focus:text-[#1F1F1F] appearance-none focus:outline-none focus:border-[#52B7EC] transition-colors cursor-pointer"
+                  className={`${source.className} w-full border-b border-gray-200 bg-transparent py-3 text-[18px] font-body text-gray-400 appearance-none focus:outline-none focus:border-[#52B7EC] transition-colors cursor-pointer`}
                   defaultValue=""
                 >
-                  <option value="" disabled>
+                  <option value="" disabled className={`text-[gray-400]`}>
                     Property Type
                   </option>
                   <option value="residential">Residential</option>
@@ -199,14 +203,14 @@ export default function ContactHero() {
               <input
                 type="text"
                 placeholder="Budget Range"
-                className="w-full border-b border-gray-200 bg-transparent py-3 text-[15px] font-body text-[#1F1F1F] placeholder-gray-400 focus:outline-none focus:border-[#52B7EC] transition-colors"
+                className={`${source.className} w-full border-b border-gray-200 bg-transparent py-3 text-[18px] font-body text-[#1F1F1F] placeholder-gray-400 focus:outline-none focus:border-[#52B7EC] transition-colors`}
               />
 
               {/* Message */}
               <input
                 type="text"
                 placeholder="Message"
-                className="w-full border-b border-gray-200 bg-transparent py-3 text-[15px] font-body text-[#1F1F1F] placeholder-gray-400 focus:outline-none focus:border-[#52B7EC] transition-colors"
+                className={`${source.className} w-full border-b border-gray-200 bg-transparent py-3 text-[18px] font-body text-[#1F1F1F] placeholder-gray-400 focus:outline-none focus:border-[#52B7EC] transition-colors`}
               />
 
               {/* Submit Button - Aligned Left */}

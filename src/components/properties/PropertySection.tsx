@@ -2,7 +2,7 @@ import PropertyCard from "./PropertyCard";
 import { ArrowRight } from "lucide-react";
 
 interface PropertyItem {
-  id:string;
+  id: string;
   image: string;
   title: string;
   location: string;
@@ -23,9 +23,10 @@ export default function PropertySection({
 }: PropertySectionProps) {
   return (
     <section
-      className={`w-full py-[50px] md:py-[60px] px-6 md:px-16 lg:px-[100px] ${isAlternateBg ? "bg-[#F9FAFB]" : "bg-white"}`}
+      className={`w-full py-[40px] md:py-[50px] px-5 md:px-8 lg:px-[48px] xl:px-[64px] ${isAlternateBg ? "bg-[#F9FAFB]" : "bg-white"}`}
     >
-      <div className="max-w-[1920px] mx-auto flex flex-col">
+      <div className="w-full flex flex-col">
+        {" "}
         {/* TOP ROW: Heading Left, Link Right */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <h2 className="font-heading font-bold text-[32px] md:text-[40px] text-[#1F1F1F] leading-tight">
@@ -39,9 +40,9 @@ export default function PropertySection({
             View All
           </a>
         </div>
-
         {/* BOTTOM ROW: The 3 Card Grid (Increased gap to handle larger cards) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+          {" "}
           {properties.map((prop, index) => (
             <PropertyCard
               key={index}

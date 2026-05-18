@@ -8,11 +8,11 @@ const source = Source_Sans_3({ subsets: ["latin"] });
 // Adjust the values inside the brackets [...] to adjust the positions
 const layout = {
   mainImage: {
-      // Use margins (ml, mt, mr, mb) to push the big image around
-      mobile: "ml-0 mt-0", // 0 margin on mobile by default
-      // Example: pushes it 40px away from the left edge, and 20px down on desktop
-      desktop: "lg:ml-[40px] lg:mt-[20px]", 
-    },
+    // Use margins (ml, mt, mr, mb) to push the big image around
+    mobile: "ml-0 mt-0", // 0 margin on mobile by default
+    // Example: pushes it 40px away from the left edge, and 20px down on desktop
+    desktop: "lg:ml-[40px] lg:mt-[20px]",
+  },
   smallImage: {
     // Mobile positioning (Percentages work best for mobile responsiveness)
     mobile: "top-[75%] left-[25%]",
@@ -34,7 +34,9 @@ export default function VisionAndApproach() {
         {/* LEFT & CENTER ZONE: Images and Overlapping Title */}
         <div className="relative w-full lg:w-[50%] xl:w-[45%] flex-shrink-0 mb-32 lg:mb-0">
           {/* IMAGE 1 — Main Large Image */}
-          <div className={`relative w-[75%] max-w-[470px] h-[400px] lg:h-[450px] rounded-[16px] overflow-hidden ${layout.mainImage.mobile} ${layout.mainImage.desktop}`}>
+          <div
+            className={`relative w-[75%] max-w-[470px] h-[400px] lg:h-[450px] rounded-[16px] overflow-hidden ${layout.mainImage.mobile} ${layout.mainImage.desktop}`}
+          >
             <Image
               src="/vision-big.png"
               alt="Luxury modern villa"

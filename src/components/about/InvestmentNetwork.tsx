@@ -2,6 +2,10 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
+import { Instrument_Sans, Source_Sans_3 } from "next/font/google";
+
+const instrument = Instrument_Sans({ subsets: ["latin"] });
+const source = Source_Sans_3({ subsets: ["latin"] });
 
 export default function InvestmentNetwork() {
   const [isVisible, setIsVisible] = useState(false);
@@ -32,9 +36,9 @@ export default function InvestmentNetwork() {
       desktop: "lg:top-[220px] lg:left-[46%] lg:w-[510px]",
     },
     pins: [
-      { id: 1, label: "Kapurai", top: "47%", left: "82.5%", delay: "2.0s" },
-      { id: 2, label: "Dabhoi Road", top: "62.5%", left: "68%", delay: "1.0s" },
-      { id: 3, label: "Dabhoi", top: "104%", left: "49%", delay: "0s" },
+      { id: 1, label: "Kapurai", top: "47%", left: "82.7%", delay: "2.0s" },
+      { id: 2, label: "Dabhoi Road", top: "62.5%", left: "69.3%", delay: "1.0s" },
+      { id: 3, label: "Dabhoi", top: "104%", left: "49.3%", delay: "0s" },
     ],
   };
 
@@ -80,11 +84,11 @@ export default function InvestmentNetwork() {
             </div>
           </div>
 
-          <h2 className="font-heading text-[#1E1E1E] font-bold text-[36px] lg:text-[46px] leading-[1.05] tracking-[-1px] mt-[40px]">
+          <h2 className="font-heading text-[#1E1E1E] font-bold text-[36px] lg:text-[42px] leading-[1.05] tracking-[-1px] mt-[40px]">
             Our Investment Network
           </h2>
 
-          <p className="font-body text-[#333333] font-normal text-[16px] lg:text-[17px] leading-[1.5] max-w-[800px] mt-[20px] mx-auto">
+          <p className={`${source.className} font-body text-[#333333] font-normal text-[14px] lg:text-[19px] leading-[1.5] max-w-[800px] mt-[20px] mx-auto`}>
             For specialized land investment opportunities, we collaborate with
             AbbasLandVision, focusing on
           </p>
@@ -100,7 +104,7 @@ export default function InvestmentNetwork() {
                     className="object-contain"
                   />
                 </div>
-                <span className="font-heading text-[#1E1E1E] font-semibold text-[15px] lg:text-[17px]">
+                <span className="font-heading text-[#1E1E1E] font-semibold text-[15px] lg:text-[19px]">
                   {category}
                 </span>
               </div>
@@ -184,7 +188,7 @@ export default function InvestmentNetwork() {
                 animationFillMode: "forwards",
               }}
             >
-              <div className="bg-[rgba(120,120,120,0.75)] backdrop-blur-[8px] rounded-[16px] px-[16px] py-[8px] flex items-center gap-2 shadow-[0_4px_12px_rgba(0,0,0,0.1)]">
+              <div className="bg-[#8F8F8F] backdrop-blur-[8px] rounded-[16px] px-[16px] py-[8px] flex items-center gap-2 shadow-[0_4px_12px_rgba(0,0,0,0.1)]">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -197,7 +201,7 @@ export default function InvestmentNetwork() {
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                   <circle cx="12" cy="10" r="3" />
                 </svg>
-                <span className="font-body text-white font-medium text-[12px] whitespace-nowrap">
+                <span className="font-body text-white font-medium text-[15px] whitespace-nowrap">
                   {pin.label}
                 </span>
               </div>
