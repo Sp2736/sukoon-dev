@@ -17,16 +17,11 @@ export default function Navbar() {
 
   const pathname = usePathname();
 
-  // 1. Pages that use the "sukoon-color.png" logo (Listings & Details)
   const isColorLogoPage = pathname.startsWith("/properties");
-
-  // 2. Pages that are solid white immediately (Properties routing)
-  // const isSolidWhitePage = pathname.startsWith("/properties");
-
-  // 3. Pages that need White TEXT initially (Contact, About)
-  const isWhiteTextPage = pathname === "/contact" || pathname === "/about" || pathname.startsWith("/properties");
-
-  // 4. Pages that need a White LOGO initially (Home, Contact, About)
+  const isWhiteTextPage =
+    pathname === "/contact" ||
+    pathname === "/about" ||
+    pathname.startsWith("/properties");
   const isWhiteLogoPage =
     pathname === "/" || pathname === "/contact" || pathname === "/about";
 
@@ -45,46 +40,37 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navBgClass =
-    isScrolled ? "bg-white shadow-sm" : "bg-transparent";
+  const navBgClass = isScrolled ? "bg-white shadow-sm" : "bg-transparent";
 
-  const textColorClass =
-    isScrolled
-      ? "text-[#1F1F1F]"
-      : isWhiteTextPage
-        ? pathname.startsWith("/properties") 
-          ? "text-black" : "text-white"
-        : "text-[#1F1F1F]";
+  const textColorClass = isScrolled
+    ? "text-[#1F1F1F]"
+    : isWhiteTextPage
+      ? pathname.startsWith("/properties")
+        ? "text-black"
+        : "text-white"
+      : "text-[#1F1F1F]";
 
-  // LOGO LOGIC REFACTORED: Color logo overrides everything on Property pages
-  let logoSrc = "/sukoon-color.png";
+  let logoSrc = "/sukoon-col.png";
   if (isColorLogoPage) {
-    logoSrc = "/sukoon-color.png";
+    logoSrc = "/sukoon-col.png";
   } else if (isScrolled) {
-    logoSrc = "/sukoon-color.png";
+    logoSrc = "/sukoon-col.png";
   } else if (isWhiteLogoPage) {
     logoSrc = "/logo-white.png";
   }
-
-  const mobileMenuBg =
-    isScrolled
-      ? "bg-white"
-      : isWhiteTextPage
-        ? "bg-black/80 backdrop-blur-md"
-        : "bg-white/90 backdrop-blur-md shadow-sm";
 
   return (
     <nav
       className={`fixed top-0 left-0 w-full z-[100] transition-all duration-300 ${navBgClass}`}
     >
-      <div className="flex items-center justify-between px-8 md:px-24 py-4">
+      <div className="flex items-center justify-between px-6 md:px-16 lg:px-24 py-4">
         {/* Logo */}
         <div className="flex items-center">
           <Link href="/" className="flex flex-col">
             <img
               src={logoSrc}
               alt="Sukoon Developers"
-              className="h-12 w-auto object-contain cursor-pointer transition-all duration-300"
+              className="h-10 md:h-12 w-auto object-contain cursor-pointer transition-all duration-300"
             />
           </Link>
         </div>
@@ -121,7 +107,7 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Hamburger Toggle (Mobile Only) */}
+        {/* Hamburger Toggle (Mobile/Tablet Only) */}
         <div className="md:hidden flex items-center relative z-[120] ml-auto">
           <button
             onClick={toggleMenu}
@@ -133,17 +119,15 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu List */}
+      {/* Mobile Menu List (Forced to White BG & Black Text) */}
       <div
-        className={`absolute top-full right-8 md:right-24 transition-all duration-300 ease-in-out md:hidden flex flex-col items-end ${
+        className={`absolute top-full right-4 md:right-16 transition-all duration-300 ease-in-out md:hidden flex flex-col items-end ${
           isOpen
             ? "translate-y-0 opacity-100"
             : "-translate-y-2 opacity-0 pointer-events-none"
         }`}
       >
-        <ul
-          className={`flex flex-col items-end gap-3 py-4 px-6 rounded-xl border border-gray-100 ${mobileMenuBg}`}
-        >
+        <ul className="flex flex-col items-end gap-4 py-6 px-8 rounded-2xl border border-gray-100 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.12)]">
           {navLinks.map((link) => {
             const isActive = pathname === link.href;
 
@@ -152,10 +136,8 @@ export default function Navbar() {
                 <Link
                   href={link.href}
                   onClick={toggleMenu}
-                  className={`font-heading text-[15px] cursor-pointer transition-all duration-300 ${textColorClass} ${
-                    isActive
-                      ? "font-bold opacity-100"
-                      : "font-normal opacity-80 hover:font-bold hover:opacity-100"
+                  className={`font-heading text-[16px] cursor-pointer transition-all duration-300 text-[#1F1F1F] ${
+                    isActive ? "font-bold" : "font-medium opacity-80"
                   }`}
                 >
                   {link.name}
@@ -167,7 +149,9 @@ export default function Navbar() {
             <Link
               href="/contact"
               onClick={toggleMenu}
-              className="font-heading text-[14px] font-semibold text-[#52B7EC] cursor-pointer"
+              className={`font-heading text-[16px] cursor-pointer transition-all duration-300 text-[#52B7EC] ${
+                pathname === "/contact" ? "font-bold" : "font-medium"
+              }`}
             >
               Contact Us
             </Link>

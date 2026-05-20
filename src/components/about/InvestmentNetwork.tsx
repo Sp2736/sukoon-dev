@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
-import Image from "next/image";
+import React, { useEffect, useRef, useState } from "react";
 import { Instrument_Sans, Source_Sans_3 } from "next/font/google";
 
 const instrument = Instrument_Sans({ subsets: ["latin"] });
@@ -9,16 +8,23 @@ const source = Source_Sans_3({ subsets: ["latin"] });
 
 export default function InvestmentNetwork() {
   const [isVisible, setIsVisible] = useState(false);
+
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) setIsVisible(true);
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
       },
       { threshold: 0.3 },
     );
-    if (sectionRef.current) observer.observe(sectionRef.current);
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
     return () => observer.disconnect();
   }, []);
 
@@ -28,82 +34,107 @@ export default function InvestmentNetwork() {
     "High-growth investment zones",
   ];
 
-  // MASTER CONTROL PANEL
-  const networkConfig = {
-    trail: {
-      path: "M0.441742 352.966L57.4417 245.466L122.442 184.966L194.942 132.966L270.442 85.9665L317.942 57.4665L355.442 40.9665L383.942 26.4665L423.442 11.4665L451.942 0.466461",
-      mobile: "top-[245px] left-[42%] w-[280px]",
-      desktop: "lg:top-[220px] lg:left-[46%] lg:w-[510px]",
-    },
-    pins: [
-      { id: 1, label: "Kapurai", top: "47%", left: "82.7%", delay: "2.0s" },
-      { id: 2, label: "Dabhoi Road", top: "62.5%", left: "69.3%", delay: "1.0s" },
-      { id: 3, label: "Dabhoi", top: "104%", left: "49.3%", delay: "0s" },
-    ],
-  };
-
   return (
     <>
-      {/* INJECTED STYLES: Guarantees animations run regardless of Tailwind config */}
+      {/* GLOBAL SVG ANIMATIONS */}
       <style
         dangerouslySetInnerHTML={{
           __html: `
-        .animate-drawTrail {
-          animation: drawPath 3.0s ease-out forwards;
-        }
-        @keyframes drawPath {
-          0% { stroke-dashoffset: 1; }
-          100% { stroke-dashoffset: 0; }
-        }
-        .animate-revealPin {
-          animation: revealPin 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        @keyframes revealPin {
-          0% { opacity: 0; transform: translate(-50%, -80%) scale(0.9); }
-          100% { opacity: 1; transform: translate(-50%, -100%) scale(1); }
-        }
-      `,
+
+            .animate-trailReveal {
+              animation: revealTrail 3.2s linear forwards;
+            }
+
+            @keyframes revealTrail {
+              from {
+                stroke-dashoffset: 1;
+              }
+
+              to {
+                stroke-dashoffset: 0;
+              }
+            }
+
+            .animate-pinReveal {
+              animation: revealPin 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            }
+
+            @keyframes revealPin {
+
+              0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.92);
+              }
+
+              100% {
+                opacity: 1;
+                transform: translateY(0px) scale(1);
+              }
+
+            }
+
+          `,
         }}
       />
 
       <section
         ref={sectionRef}
-        className="bg-[#F7F7F7] w-full pt-[100px] lg:pt-[120px] pb-0 overflow-hidden flex flex-col items-center"
+        className="bg-[#F7F7F7] w-full pt-[40px] lg:pt-[60px] pb-0 overflow-hidden flex flex-col items-center"
       >
-        {/* --- TOP CONTENT AREA --- */}
-        <div className="container mx-auto px-6 flex flex-col items-center text-center relative z-20">
-          <div className="w-[230px] h-[125px] bg-white rounded-[24px] border border-black/5 shadow-[0_6px_18px_rgba(0,0,0,0.04)] flex items-center justify-center">
-            <div className="relative w-[180px] h-[78px]">
-              <Image
-                src="/abbas-logo-about.png"
-                alt="Abbas Land Vision Logo"
-                fill
-                className="object-contain"
-                priority
-              />
-            </div>
+        {/* TOP CONTENT */}
+        <div className="max-w-[1400px] mx-auto px-6 text-center relative z-20">
+          {/* LOGO */}
+          <div className="mx-auto w-[230px] h-[125px] bg-white rounded-[24px] border border-black/5 shadow-[0_6px_18px_rgba(0,0,0,0.04)] flex items-center justify-center">
+            <img
+              src="/abbas-logo-about.png"
+              alt="Abbas Land Vision"
+              className="w-[180px] object-contain"
+            />
           </div>
 
-          <h2 className="font-heading text-[#1E1E1E] font-bold text-[36px] lg:text-[42px] leading-[1.05] tracking-[-1px] mt-[40px]">
+          {/* HEADING */}
+          <h2
+            className="
+              font-heading
+              text-[#1E1E1E]
+              font-bold
+              text-[36px]
+              lg:text-[42px]
+              leading-[1.05]
+              tracking-[-1px]
+              mt-[40px]
+            "
+          >
             Our Investment Network
           </h2>
 
-          <p className={`${source.className} font-body text-[#333333] font-normal text-[14px] lg:text-[19px] leading-[1.5] max-w-[800px] mt-[20px] mx-auto`}>
+          {/* DESCRIPTION */}
+          <p
+            className={`
+              ${source.className}
+              text-[#333333]
+              text-[14px]
+              lg:text-[19px]
+              leading-[1.5]
+              max-w-[850px]
+              mt-[20px]
+              mx-auto
+            `}
+          >
             For specialized land investment opportunities, we collaborate with
             AbbasLandVision, focusing on
           </p>
 
+          {/* CATEGORY LIST */}
           <div className="flex flex-col md:flex-row justify-center items-center gap-5 lg:gap-[50px] mt-[30px] pb-[20px]">
             {categories.map((category, index) => (
               <div key={index} className="flex items-center gap-[8px]">
-                <div className="relative w-[18px] h-[18px] flex-shrink-0">
-                  <Image
-                    src="/verified-check.png"
-                    alt="Category Star"
-                    fill
-                    className="object-contain"
-                  />
-                </div>
+                <img
+                  src="/verified-check.png"
+                  alt="check"
+                  className="w-[18px] h-[18px] object-contain"
+                />
+
                 <span className="font-heading text-[#1E1E1E] font-semibold text-[15px] lg:text-[19px]">
                   {category}
                 </span>
@@ -112,103 +143,233 @@ export default function InvestmentNetwork() {
           </div>
         </div>
 
-        {/* --- IMAGE & ANIMATION AREA --- */}
-        <div className="relative w-full h-[570px] lg:h-[700px] -mt-[40px] lg:-mt-[100px] z-10">
-          <Image
-            src="/dabhoi-road.png"
-            alt="Dabhoi Land Investment Corridor"
-            fill
-            className="object-cover object-center block"
-            sizes="100vw"
-            priority
-          />
-
-          {/* 1. The Merge & Blur Effect */}
-          <div className="absolute top-0 left-0 w-full h-[250px] pointer-events-none z-10">
-            <div className="absolute inset-0 bg-gradient-to-b from-[#F7F7F7] via-[#F7F7F7]/80 to-transparent" />
-            <div
-              className="absolute inset-0 backdrop-blur-[8px]"
-              style={{
-                WebkitMaskImage:
-                  "linear-gradient(to bottom, black 0%, transparent 100%)",
-                maskImage:
-                  "linear-gradient(to bottom, black 0%, transparent 100%)",
-              }}
-            />
-          </div>
-
-          {/* 2. THE ADJUSTABLE SVG TRAIL WRAPPER */}
-          <div
-            className={`absolute z-20 pointer-events-none transition-all duration-300 ${networkConfig.trail.mobile} ${networkConfig.trail.desktop}`}
+        {/* SVG MASTER SCENE */}
+        <div className="relative w-full -mt-[40px] lg:-mt-[100px]">
+          <svg
+            viewBox="0 0 1920 1080"
+            className="w-full h-auto block"
+            preserveAspectRatio="xMidYMid meet"
           >
-            <svg
-              className="w-full h-auto"
-              viewBox="0 0 453 354"
-              preserveAspectRatio="xMidYMid meet"
-            >
-              <defs>
-                <mask id="trail-mask">
-                  <path
-                    d={networkConfig.trail.path}
-                    fill="none"
-                    stroke="white"
-                    strokeWidth="10"
-                    pathLength="1"
-                    strokeDasharray="1"
-                    strokeDashoffset="1"
-                    /* The class is applied conditionally here based on scroll visibility */
-                    className={isVisible ? "animate-drawTrail" : ""}
-                  />
-                </mask>
-              </defs>
+            <defs>
+              {/* TRAIL MASK */}
+              <mask id="trail-mask">
+                {/* Hidden Background */}
+                <rect width="100%" height="100%" fill="black" />
 
-              <path
-                d={networkConfig.trail.path}
-                fill="none"
-                stroke="white"
-                strokeWidth="3"
-                mask="url(#trail-mask)"
-                style={{
-                  strokeDasharray: "15 20",
-                  filter: "drop-shadow(0 0 8px rgba(255,255,255,0.8))",
-                }}
-              />
-            </svg>
-          </div>
+                {/* Animated Reveal Path */}
+                <path
+                  d="M2.50067 599.501L34.5007 512.001L92.0007 415.501L170.001 334.001L259.501 256.501L342.501 205.501L398.501 170.001L462.501 126.001L532.001 85.5006L606.501 50.0006L639.001 31.5006L677.501 21.0006L722.001 8.50058L747.001 2.50058"
+                  fill="none"
+                  stroke="white"
+                  strokeWidth="36"
+                  strokeLinecap="round"
+                  pathLength="1"
+                  strokeDasharray="1"
+                  strokeDashoffset="1"
+                  className={isVisible ? "animate-trailReveal" : ""}
+                />
+              </mask>
 
-          {/* 3. The Location Pins */}
-          {networkConfig.pins.map((pin) => (
-            <div
-              key={pin.id}
-              className={`absolute flex flex-col items-center transform -translate-x-1/2 -translate-y-full z-30 opacity-0 ${isVisible ? "animate-revealPin" : ""}`}
+              {/* GLOW */}
+              <filter
+                id="trailGlow"
+                x="-50%"
+                y="-50%"
+                width="200%"
+                height="200%"
+              >
+                <feGaussianBlur stdDeviation="6" result="blur" />
+
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+
+              {/* TOP BLUR FADE */}
+              <linearGradient id="topFade" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#F7F7F7" stopOpacity="1" />
+                <stop offset="45%" stopColor="#F7F7F7" stopOpacity="0.7" />
+                <stop offset="100%" stopColor="#F7F7F7" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+
+            {/* BACKGROUND IMAGE */}
+            <image
+              href="/dabhoi-road.png"
+              x="0"
+              y="0"
+              width="1920"
+              height="1080"
+              preserveAspectRatio="xMidYMid slice"
+            />
+
+            {/* TOP FADE OVERLAY */}
+            <rect x="0" y="0" width="1920" height="260" fill="url(#topFade)" />
+
+            {/* MAIN DASHED TRAIL */}
+            <path
+              d="M2.50067 599.501L34.5007 512.001L92.0007 415.501L170.001 334.001L259.501 256.501L342.501 205.501L398.501 170.001L462.501 126.001L532.001 85.5006L606.501 50.0006L639.001 31.5006L677.501 21.0006L722.001 8.50058L747.001 2.50058"
+              fill="none"
+              stroke="white"
+              strokeWidth="4"
+              strokeLinecap="round"
+              strokeDasharray="10 18"
+              mask="url(#trail-mask)"
+              /* ADD THIS: Shifts the entire line (X, Y) */
+              transform="translate(885, 345)"
+            />
+
+            {/* PIN 1 */}
+            <g
+              className={isVisible ? "animate-pinReveal" : ""}
               style={{
-                top: pin.top,
-                left: pin.left,
-                animationDelay: pin.delay,
-                animationFillMode: "forwards",
+                animationDelay: "0.0s",
+                opacity: 0,
               }}
             >
-              <div className="bg-[#8F8F8F] backdrop-blur-[8px] rounded-[16px] px-[16px] py-[8px] flex items-center gap-2 shadow-[0_4px_12px_rgba(0,0,0,0.1)]">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="w-[12px] h-[12px] text-white"
-                >
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                  <circle cx="12" cy="10" r="3" />
-                </svg>
-                <span className="font-body text-white font-medium text-[15px] whitespace-nowrap">
-                  {pin.label}
-                </span>
-              </div>
-              <div className="h-[40px] lg:h-[60px] border-l-[2px] border-dashed border-[rgba(255,255,255,0.75)]"></div>
-              <div className="w-[10px] h-[10px] bg-white rounded-full shadow-[0_0_8px_rgba(255,255,255,0.8)] relative -mt-[2px]"></div>
-            </div>
-          ))}
+              <line
+                x1="890"
+                y1="935"
+                x2="890"
+                y2="825"
+                stroke="rgba(255,255,255,0.75)"
+                strokeWidth="2"
+                strokeDasharray="6 6"
+              />
+
+              <circle cx="890" cy="940" r="8" fill="white" />
+
+              <rect
+                x="810"
+                y="800"
+                width="160"
+                height="54"
+                rx="18"
+                fill="rgb(143, 143, 143)"
+              />
+
+              <image
+                href="/location-marker-white.png"
+                x="833"
+                y="815"
+                width="24"
+                height="24"
+              />
+
+              <text
+                x="910"
+                y="834"
+                fill="white"
+                textAnchor="middle"
+                fontSize="22"
+                fontFamily="sans-serif"
+                fontWeight="500"
+              >
+                Dabhoi
+              </text>
+            </g>
+
+            {/* PIN 2 */}
+            <g
+              className={isVisible ? "animate-pinReveal" : ""}
+              style={{
+                animationDelay: "1.0s",
+                opacity: 0,
+              }}
+            >
+              <line
+                x1="1265"
+                y1="520"
+                x2="1265"
+                y2="370"
+                stroke="rgba(255,255,255,0.75)"
+                strokeWidth="2"
+                strokeDasharray="6 6"
+              />
+
+              <circle cx="1266" cy="525" r="8" fill="white" />
+
+              <rect
+                x="1155"
+                y="320"
+                width="220"
+                height="54"
+                rx="18"
+                fill="rgb(143, 143, 143)"
+              />
+
+              <image
+                href="/location-marker-white.png"
+                x="1180"
+                y="335"
+                width="24"
+                height="24"
+              />
+
+              <text
+                x="1285"
+                y="355"
+                fill="white"
+                textAnchor="middle"
+                fontSize="22"
+                fontFamily="sans-serif"
+                fontWeight="500"
+              >
+                Dabhoi Road
+              </text>
+            </g>
+
+            {/* PIN 3 */}
+            <g
+              className={isVisible ? "animate-pinReveal" : ""}
+              style={{
+                animationDelay: "2.0s",
+                opacity: 0,
+              }}
+            >
+              <line
+                x1="1640"
+                y1="350"
+                x2="1640"
+                y2="240"
+                stroke="rgba(255,255,255,0.75)"
+                strokeWidth="2"
+                strokeDasharray="6 6"
+              />
+
+              <circle cx="1640" cy="345" r="8" fill="white" />
+
+              <rect
+                x="1560"
+                y="185"
+                width="160"
+                height="54"
+                rx="18"
+                fill="rgb(143, 143, 143)"
+              />
+
+              <image
+                href="/location-marker-white.png"
+                x="1582"
+                y="200"
+                width="24"
+                height="24"
+              />
+
+              <text
+                x="1656"
+                y="220"
+                fill="white"
+                textAnchor="middle"
+                fontSize="22"
+                fontFamily="sans-serif"
+                fontWeight="500"
+              >
+                Kapurai
+              </text>
+            </g>
+          </svg>
         </div>
       </section>
     </>

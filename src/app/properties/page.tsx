@@ -58,7 +58,7 @@ export default async function PropertiesPage() {
         .filter((p) => p.category === category)
         .map((p) => ({
           id: p.public_id, // Important: Passes the dynamic ID to the card
-          image: p.cover_image || "/sukoon-color.png", // Fallback image
+          image: p.cover_image || "/sukoon-col.png", // Fallback image
           title: p.title,
           location: p.city || "Gujarat",
           details: p.configuration || "Details on request",

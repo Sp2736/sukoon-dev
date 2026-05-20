@@ -15,18 +15,16 @@ export default function AboutSection() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // When 50% of the section is visible, trigger the animation
         if (entry.isIntersecting) {
           setIsVisible(true);
-          // Unobserve once triggered so it doesn't replay awkwardly if they scroll up and down
           if (sectionRef.current) {
             observer.unobserve(sectionRef.current);
           }
         }
       },
       {
-        threshold: 0.5, // 0.5 means 50% of the section must be in the viewport
-      }
+        threshold: 0.3,
+      },
     );
 
     if (sectionRef.current) {
@@ -41,12 +39,13 @@ export default function AboutSection() {
   }, []);
 
   return (
-    <section 
-      ref={sectionRef} 
-      className="relative w-full bg-white overflow-hidden h-[967px] flex items-center"
+    <section
+      ref={sectionRef}
+      // py-20 gives natural padding on mobile, lg:h-[967px] keeps exact desktop height
+      className="relative w-full bg-white overflow-hidden py-20 lg:py-0 lg:h-[967px] flex items-center"
     >
       {/* Background Building Layer */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
+      <div className="absolute inset-0 z-0 pointer-events-none flex items-end">
         <img
           src="/constructive-animation.svg"
           alt="Building Construction Outline"
@@ -54,8 +53,7 @@ export default function AboutSection() {
             absolute
             bottom-0
             left-[-20px]
-            w-full
-            lg:w-[85%]
+            w-[150%] md:w-[100%] lg:w-[85%]
             h-auto
             object-contain
             object-bottom-left
@@ -69,20 +67,23 @@ export default function AboutSection() {
         />
       </div>
 
-      {/* Content Container */}
-      <div className="relative z-10 w-full">
-        {/* Positioning Wrapper */}
-        <div className="ml-[48.5%] max-w-[760px]">
+      {/* Content Container - Adjusted width and padding for mobile */}
+      <div className="relative z-10 w-full px-6 md:px-16 lg:px-0">
+        {/* Positioning Wrapper: 
+            Now completely transparent on all screen sizes so the SVG shows through.
+            Preserves your desktop left margin.
+        */}
+        <div className="w-full lg:ml-[48.5%] max-w-[760px] bg-transparent p-6 md:p-8 lg:p-0">
           {/* Heading */}
           <h2
             className="
               font-heading
               font-bold
               text-[#1F1F1F]
-              text-[40px]
-              leading-[1.15]
+              text-[32px] md:text-[36px] lg:text-[40px]
+              leading-[1.2] lg:leading-[1.15]
               tracking-[-0.02em]
-              mb-[38px]
+              mb-6 lg:mb-[38px]
             "
           >
             About Sukoon Developers
@@ -93,9 +94,9 @@ export default function AboutSection() {
             className={`
               ${sourceSans.className}
               text-[#1F1F1F]
-              text-[20px]
-              leading-[1.7]
-              space-y-[32px]
+              text-[16px] md:text-[18px] lg:text-[20px]
+              leading-[1.6] lg:leading-[1.7]
+              space-y-6 lg:space-y-[32px]
               max-w-[690px]
             `}
           >

@@ -13,10 +13,22 @@ export default function Footer() {
         {/* BACKGROUND IMAGE */}
         {/* ========================================================= */}
         <div className="absolute top-0 left-0 w-full h-[220px] z-[0] backdrop-blur-[12px]" />
+
+        {/* DESKTOP IMAGE (Hidden on mobile) */}
         <img
           src="/footer-bg-3.jpg"
-          alt="Sukoon Property"
-          className="absolute bottom-0 left-0 w-full h-full object-[center_74%] scale-y-120 brightness-[0.65] contrast-[0.85] saturate-[0.90] blur-[0.4px]" 
+          alt="Sukoon Property Desktop"
+          className="hidden md:block absolute bottom-0 left-0 w-full h-full object-[center_74%] scale-y-120 brightness-[0.65] contrast-[0.85] saturate-[0.90] blur-[0.4px]"
+        />
+
+        {/* MOBILE IMAGE (Hidden on desktop) 
+            Note: I removed the scale-y-120 here assuming your new mobile 
+            image is already perfectly proportioned for portrait screens! 
+        */}
+        <img
+          src="/footer-bg-mobile.jpg"
+          alt="Sukoon Property Mobile"
+          className="block md:hidden absolute bottom-0 left-0 w-full h-full object-cover object-bottom brightness-[0.65] contrast-[0.85] saturate-[0.90] blur-[0.4px]"
         />
 
         {/* ========================================================= */}
@@ -24,11 +36,6 @@ export default function Footer() {
         {/* ========================================================= */}
 
         <div className="absolute inset-0 z-[1] pointer-events-none">
-          {/* Replaced the complex, multi-layered blurs with a single, deep gradient. 
-            This starts solid white/gray at the top, stays mostly solid for the first 35% 
-            where the text lives, and then flawlessly fades into the image over the next 40%, 
-            eliminating any hard lines or separation.
-          */}
           <div className="absolute top-0 left-0 w-full h-[75%] bg-gradient-to-b from-[#F7F8FA] via-[#F7F8FA]/95 via-[35%] to-transparent" />
         </div>
 
@@ -82,7 +89,6 @@ export default function Footer() {
             {/* TOP ROW */}
             {/* ================================================= */}
 
-            {/* Increased bottom margin from mb-[38px] to mb-[72px] md:mb-[80px] to match the spacious Figma layout */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 mb-[72px] md:mb-[80px]">
               {/* LOGO */}
 
