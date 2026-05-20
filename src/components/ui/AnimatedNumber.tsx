@@ -50,7 +50,7 @@ export default function AnimatedNumber({
           window.requestAnimationFrame(step);
         }
       },
-      { threshold: 0.5 }, // Start when 50% of the element is visible
+      { threshold: 0.3 }, // Start when 30% of the element is visible
     );
 
     if (elementRef.current) {

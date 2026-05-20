@@ -1,9 +1,31 @@
+"use client";
+
 import Link from "next/link";
+import { useState, useEffect, useRef } from "react";
 import { Phone, Mail } from "lucide-react";
 
 export default function Footer() {
+
+  const footerRef = useRef<HTMLElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (footerRef.current) observer.observe(footerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <footer className="relative w-full overflow-hidden bg-white">
+    <footer ref={footerRef} className="relative w-full overflow-hidden bg-white">
       {/* ========================================================= */}
       {/* MAIN SECTION */}
       {/* ========================================================= */}
@@ -18,7 +40,7 @@ export default function Footer() {
         <img
           src="/footer-bg-3.jpg"
           alt="Sukoon Property Desktop"
-          className="hidden md:block absolute bottom-0 left-0 w-full h-full object-[center_74%] scale-y-120 brightness-[0.65] contrast-[0.85] saturate-[0.90] blur-[0.4px]"
+          className={`hidden md:block absolute bottom-0 left-0 w-full h-full object-[center_74%] scale-y-120 brightness-[0.65] contrast-[0.85] saturate-[0.90] blur-[0.4px] ease-out bg-slow-fade delay-1000 ${isVisible ? "opacity-100 blur-0 brightness-100" : "opacity-0 blur-md brightness-75"}`}
         />
 
         {/* MOBILE IMAGE (Hidden on desktop) 
@@ -28,7 +50,7 @@ export default function Footer() {
         <img
           src="/footer-bg-mobile.jpg"
           alt="Sukoon Property Mobile"
-          className="block md:hidden absolute bottom-0 left-0 w-full h-full object-cover object-bottom brightness-[0.65] contrast-[0.85] saturate-[0.90] blur-[0.4px]"
+          className={`block md:hidden absolute bottom-0 left-0 w-full h-full object-cover object-bottom brightness-[0.65] contrast-[0.85] saturate-[0.90] blur-[0.4px] ease-out bg-slow-fade delay-1000 ${isVisible ? "opacity-100 blur-0 brightness-100" : "opacity-0 blur-md brightness-75"}`}
         />
 
         {/* ========================================================= */}
@@ -55,11 +77,11 @@ export default function Footer() {
           {/* ===================================================== */}
 
           <div className="w-full flex flex-col items-center text-center pt-[70px] px-6">
-            <h2 className="font-heading font-bold text-[#1F1F1F] text-[32px] md:text-[40px] leading-[1.15] tracking-[-0.02em] mb-[16px] max-w-[820px]">
+            <h2 className={`font-heading font-bold text-[#1F1F1F] text-[32px] md:text-[40px] leading-[1.15] tracking-[-0.02em] mb-[16px] max-w-[820px] ${isVisible ? "animate-base main-heading-animation" : "opacity-0"}`}>
               Ready to Invest in the Right Property?
             </h2>
 
-            <p className="font-body font-normal text-[#1F1F1F]/80 text-[16px] md:text-[18px] leading-[1.7] max-w-[650px] mb-[32px]">
+            <p className={`font-body font-normal text-[#1F1F1F]/80 text-[16px] md:text-[18px] leading-[1.7] max-w-[650px] mb-[32px] ${isVisible ? "animate-base sub-heading-animation" : "opacity-0"}`}>
               Explore verified residential, commercial, and land opportunities
               <br className="hidden md:block" />
               tailored to your investment goals
@@ -67,7 +89,7 @@ export default function Footer() {
 
             <Link
               href="/properties"
-              className="inline-flex items-center justify-center bg-[#52B7EC] text-white px-6 h-[40px] rounded-full font-heading font-normal text-[12px] hover:brightness-110 transition-all duration-300"
+              className={`animate-base content-animation inline-flex items-center justify-center bg-[#52B7EC] text-white px-6 h-[40px] rounded-full font-heading font-normal text-[12px] hover:brightness-110 transition-all duration-300 ${isVisible ? "animate-base scale-pop-animation delay-200" : "opacity-0"}`}
             >
               Explore Properties
             </Link>
@@ -92,7 +114,7 @@ export default function Footer() {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 mb-[72px] md:mb-[80px]">
               {/* LOGO */}
 
-              <div>
+              <div className={`${isVisible ? "animate-base form-animation delay-300" : "opacity-0"}`}>
                 <img
                   src="/logo-white.png"
                   alt="Sukoon Developer"
@@ -102,7 +124,7 @@ export default function Footer() {
 
               {/* NAVIGATION */}
 
-              <nav className="flex flex-wrap gap-10 md:gap-15 font-body text-white/90 text-[15px]">
+              <nav className={`flex flex-wrap gap-10 md:gap-15 font-body text-white/90 text-[15px] ${isVisible ? "animate-base content-animation delay-400" : "opacity-0"}`}>
                 <Link
                   href="/"
                   className="hover:text-white transition-colors duration-300"
@@ -130,7 +152,7 @@ export default function Footer() {
             {/* BOTTOM ROW */}
             {/* ================================================= */}
 
-            <div className="relative flex flex-col md:flex-row justify-between items-start md:items-center gap-6 text-white/80 text-[14px] font-body">
+            <div className={`relative flex flex-col md:flex-row justify-between items-start md:items-center gap-6 text-white/80 text-[14px] font-body ${isVisible ? "animate-base content-animation delay-500" : "opacity-0"}`}>
               {/* CONTACT INFO */}
 
               <div className="flex flex-col sm:flex-row gap-5 sm:gap-8">

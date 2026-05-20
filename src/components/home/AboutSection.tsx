@@ -76,7 +76,7 @@ export default function AboutSection() {
         <div className="w-full lg:ml-[48.5%] max-w-[760px] bg-transparent p-6 md:p-8 lg:p-0">
           {/* Heading */}
           <h2
-            className="
+            className={`
               font-heading
               font-bold
               text-[#1F1F1F]
@@ -84,7 +84,8 @@ export default function AboutSection() {
               leading-[1.2] lg:leading-[1.15]
               tracking-[-0.02em]
               mb-6 lg:mb-[38px]
-            "
+              ${isVisible ? "animate-base main-heading-animation delay-400" : "opacity-0"}
+            `}
           >
             About Sukoon Developers
           </h2>
@@ -98,6 +99,7 @@ export default function AboutSection() {
               leading-[1.6] lg:leading-[1.7]
               space-y-6 lg:space-y-[32px]
               max-w-[690px]
+              ${isVisible ? "animate-base content-animation delay-600" : "opacity-0"}
             `}
           >
             <p>

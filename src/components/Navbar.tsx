@@ -61,7 +61,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full z-[100] transition-all duration-300 ${navBgClass}`}
+      className={`fixed top-0 left-0 w-full z-[100] transition-all duration-700 ${navBgClass}`}
     >
       <div className="flex items-center justify-between px-6 md:px-16 lg:px-24 py-4">
         {/* Logo */}
@@ -97,7 +97,7 @@ export default function Navbar() {
 
           <Link
             href="/contact"
-            className="bg-[#52B7EC] text-white px-8 py-3 rounded-full font-heading font-semibold text-[14px] hover:brightness-110 transition-all cursor-pointer shadow-sm"
+            className="bg-[#52B7EC] text-white px-8 py-3 rounded-full font-heading font-semibold text-[14px] transition-all cursor-pointer shadow-sm"
           >
             Contact Us
           </Link>

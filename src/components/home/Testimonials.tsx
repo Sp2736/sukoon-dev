@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 // The 3 exact profiles you requested
@@ -35,11 +35,32 @@ export default function Testimonials() {
   // Start right in the middle of our massive array so the user can click left or right endlessly
   const [activeIndex, setActiveIndex] = useState(21);
 
+  const sectionRef = useRef<HTMLElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
   const nextSlide = () => setActiveIndex((prev) => prev + 1);
   const prevSlide = () => setActiveIndex((prev) => prev - 1);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 },
+    );
+
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="relative w-full bg-white py-16 lg:py-[120px] overflow-hidden flex flex-col items-center">
+    <section
+      ref={sectionRef}
+      className="relative w-full bg-white py-16 lg:py-[120px] overflow-hidden flex flex-col items-center"
+    >
       {/* Inject dynamic CSS variables for media-query responsive card widths. */}
       <style
         dangerouslySetInnerHTML={{
@@ -59,11 +80,11 @@ export default function Testimonials() {
       {/* Headings Container */}
       <div className="w-full max-w-[800px] mx-auto text-center mb-10 lg:mb-[60px] px-6">
         {/* Fixed the text-[28 px] typo here */}
-        <h2 className="font-heading font-bold text-[#1F1F1F] text-[28px] md:text-[32px] lg:text-[38px] leading-[1.2] lg:leading-[1.15] mb-4 lg:mb-[24px]">
+        <h2 className={`font-heading font-bold text-[#1F1F1F] text-[28px] md:text-[32px] lg:text-[38px] leading-[1.2] lg:leading-[1.15] mb-4 lg:mb-[24px] ${isVisible ? "animate-base main-heading-animation" : "opacity-0"}`}>
           Trusted by Property
           <br className="hidden md:block" /> Buyers & Investors
         </h2>
-        <p className="font-body font-normal text-[#000000]/70 text-[14px] md:text-[16px] lg:text-[18px] leading-[1.6]">
+        <p className={`font-body font-normal text-[#000000]/70 text-[14px] md:text-[16px] lg:text-[18px] leading-[1.6] ${isVisible ? "animate-base sub-heading-animation" : "opacity-0"}`}>
           Hear from clients who found the right residential, commercial, and
           <br className="hidden md:block" /> land investment opportunities with
           us
@@ -71,7 +92,7 @@ export default function Testimonials() {
       </div>
 
       {/* Carousel Track Container */}
-      <div className="relative w-full py-4">
+      <div className={`relative w-full py-4 ${isVisible ? "animate-base content-animation delay-400" : "opacity-0"}`}>
         {/* Figma-style edge fades */}
         <div className="absolute top-0 bottom-0 left-0 w-[15%] md:w-[25%] lg:w-[30%] bg-gradient-to-r from-white via-white/90 to-transparent z-20 pointer-events-none" />
         <div className="absolute top-0 bottom-0 right-0 w-[15%] md:w-[25%] lg:w-[30%] bg-gradient-to-l from-white via-white/90 to-transparent z-20 pointer-events-none" />
@@ -122,7 +143,7 @@ export default function Testimonials() {
       </div>
 
       {/* Navigation Buttons */}
-      <div className="flex items-center justify-center gap-[16px] mt-[30px] lg:mt-[40px] z-30 relative">
+      <div className={`flex items-center justify-center gap-[16px] mt-[30px] lg:mt-[40px] z-30 relative ${isVisible ? "animate-base content-animation delay-1000" : "opacity-0"}`}>
         <button
           onClick={prevSlide}
           className="w-[44px] h-[44px] lg:w-[50px] lg:h-[50px] rounded-full border border-gray-200 bg-white flex items-center justify-center text-[#52B7EC] hover:bg-gray-50 transition-colors active:scale-95"
