@@ -78,7 +78,7 @@ export default function Navbar() {
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-10 ml-auto">
           <div
-            className={`flex items-center gap-8 font-heading text-[15px] ${textColorClass}`}
+            className={`flex items-center gap-8 font-heading text-[15px] font-semibold ${textColorClass}`}
           >
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
@@ -87,11 +87,7 @@ export default function Navbar() {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={`cursor-pointer transition-all duration-300 ${
-                    isActive
-                      ? "font-semibold opacity-100"
-                      : "font-normal opacity-80 hover:font-semibold hover:opacity-100"
-                  }`}
+                  className={`transition-all duration-300 ${isActive ? "opacity-100" : "opacity-70 hover:opacity-100"}`}
                 >
                   {link.name}
                 </Link>

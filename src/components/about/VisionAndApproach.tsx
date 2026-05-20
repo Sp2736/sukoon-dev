@@ -6,23 +6,26 @@ const source = Source_Sans_3({ subsets: ["latin"] });
 
 export default function VisionAndApproach() {
   return (
-<section className="bg-[#F6F6F6] w-full pt-16 lg:pt-[120px] pb-8 lg:pb-[40px] overflow-hidden">      <div className="max-w-[1500px] mx-auto px-5 sm:px-8 lg:px-10">
+    <section className="bg-[#F6F6F6] w-full pt-16 lg:pt-[120px] pb-8 lg:pb-[40px] overflow-hidden">
+      <div className="max-w-[1500px] mx-auto px-5 sm:px-8 lg:px-10">
         {/* =========================
             DESKTOP LAYOUT
         ========================== */}
-        <div className="hidden xl:flex items-start justify-between gap-16">
+        {/* Changed from flex to grid for a strict shared alignment baseline */}
+        <div className="hidden xl:grid grid-cols-[1.2fr_1fr] items-start gap-16 lg:gap-20">
           {/* LEFT VISUAL SECTION */}
-          <div className="relative w-[55%]">
+          {/* Added sticky positioning to synchronize vertical scroll rhythm */}
+          <div className="relative w-full sticky top-32 pb-12">
             {/* IMAGE COMPOSITION */}
             <div className="relative w-full max-w-[780px] aspect-[1.15/1]">
               {/* BIG IMAGE */}
               <div
                 className="
                   absolute
-                  left-4
-                  top-3
-                  w-[64%]
-                  h-[68%]
+                  left-7
+                  top-0
+                  w-[66%]
+                  h-[70%]
                   rounded-[18px]
                   overflow-hidden
                 "
@@ -40,13 +43,13 @@ export default function VisionAndApproach() {
               <div
                 className="
                   absolute
-                  right-[-1.8%]
-                  bottom-[24%]
+                  right-[-4%]
+                  bottom-[25%]
                   w-[53%]
                   h-[48%]
                   rounded-[18px]
                   overflow-hidden
-                  shadow-[0_13px_40px_rgba(0, 0, 0, 0.22)]
+                  shadow-[0_15px_35px_rgba(0,0,0,0.1),0_4px_10px_rgba(0,0,0,0.05)]
                   z-10
                 "
               >
@@ -60,13 +63,15 @@ export default function VisionAndApproach() {
               </div>
 
               {/* INTERSECTION TITLE */}
+              {/* Added w-max to prevent text clipping and restored original font formatting */}
               <div
                 className="
                   absolute
                   z-20
-                  left-[68%]
-                  top-[12%]
+                  left-[72%]
+                  top-[10.5%]
                   pointer-events-none
+                  w-max
                 "
               >
                 <h2
@@ -86,20 +91,22 @@ export default function VisionAndApproach() {
           </div>
 
           {/* RIGHT CONTENT SECTION */}
-          <div className="w-[40%] flex flex-col pt-[40px]">
+          {/* Removed arbitrary pt to lock perfectly with the top edge of the left image */}
+          <div className="w-full flex flex-col pt-1">
             {/* CARD 1 */}
+            {/* Reduced internal padding and gaps to remove bulk */}
             <div
               className="
-                bg-[#EEF4F6]
-                rounded-[28px]
-                p-[28px_34px]
+                bg-[#D9F2FF4D]
+                rounded-[24px]
+                p-[22px_26px]
                 flex
                 items-start
-                gap-6
+                gap-5
               "
             >
-              <div className="flex items-center gap-6 shrink-0 pt-1">
-                <div className="relative w-[30px] h-[30px]">
+              <div className="flex items-center gap-5 shrink-0 pt-1">
+                <div className="relative w-[26px] h-[26px]">
                   <Image
                     src="/bullet-vision.png"
                     alt="Vision Bullet"
@@ -108,16 +115,16 @@ export default function VisionAndApproach() {
                   />
                 </div>
 
-                <div className="w-[1px] h-[58px] bg-[#D9E3E7]" />
+                <div className="w-[1px] h-[50px] bg-[#D9E3E7]" />
               </div>
 
               <div>
-                <h3 className="font-heading text-[22px] font-bold text-[#1E1E1E] mb-2">
+                <h3 className="font-heading text-[20px] font-bold text-[#1E1E1E] mb-1.5">
                   Vision
                 </h3>
 
                 <p
-                  className={`${source.className} text-[16px] leading-[1.7] text-[#333333]`}
+                  className={`${source.className} text-[15px] leading-[1.65] text-[#333333]`}
                 >
                   To be a trusted real estate partner delivering long-term value
                   through transparency and expertise
@@ -128,17 +135,17 @@ export default function VisionAndApproach() {
             {/* CARD 2 */}
             <div
               className="
-                bg-[#EEF4F6]
-                rounded-[28px]
-                p-[28px_34px]
+                bg-[#D9F2FF4D]
+                rounded-[24px]
+                p-[22px_26px]
                 flex
                 items-start
-                gap-6
-                mt-5
+                gap-5
+                mt-4
               "
             >
-              <div className="flex items-center gap-6 shrink-0 pt-1">
-                <div className="relative w-[30px] h-[30px]">
+              <div className="flex items-center gap-5 shrink-0 pt-1">
+                <div className="relative w-[26px] h-[26px]">
                   <Image
                     src="/bullet-approach.png"
                     alt="Approach Bullet"
@@ -147,16 +154,16 @@ export default function VisionAndApproach() {
                   />
                 </div>
 
-                <div className="w-[1px] h-[58px] bg-[#D9E3E7]" />
+                <div className="w-[1px] h-[50px] bg-[#D9E3E7]" />
               </div>
 
               <div>
-                <h3 className="font-heading text-[22px] font-bold text-[#1E1E1E] mb-2">
+                <h3 className="font-heading text-[20px] font-bold text-[#1E1E1E] mb-1.5">
                   Approach
                 </h3>
 
                 <p
-                  className={`${source.className} text-[16px] leading-[1.7] text-[#333333]`}
+                  className={`${source.className} text-[15px] leading-[1.65] text-[#333333]`}
                 >
                   We believe real estate decisions should be simple, informed,
                   and stress-free
@@ -165,12 +172,13 @@ export default function VisionAndApproach() {
             </div>
 
             {/* BULLET LIST */}
-            <div className="mt-[48px] ml-2">
-              <h4 className="font-heading text-[16px] font-bold text-[#1E1E1E] mb-5">
+            {/* Reduced top margin to integrate closer with the cards */}
+            <div className="mt-[32px] ml-2">
+              <h4 className="font-heading text-[16px] font-bold text-[#1E1E1E] mb-4">
                 Our approach is built on
               </h4>
 
-              <ul className="flex flex-col gap-3">
+              <ul className="flex flex-col gap-2.5">
                 {[
                   "Zero brokerage model",
                   "Honest consultation",
@@ -182,12 +190,12 @@ export default function VisionAndApproach() {
                     className="
                       flex
                       items-start
-                      text-[18px]
+                      text-[17px]
                       text-[#1E1E1E]
-                      leading-[1.8]
+                      leading-[1.7]
                     "
                   >
-                    <span className="text-[#5AB6E8] text-[24px] mr-4 leading-none">
+                    <span className="text-[#5AB6E8] text-[22px] mr-4 leading-none">
                       •
                     </span>
 
