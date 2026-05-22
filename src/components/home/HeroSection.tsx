@@ -6,7 +6,7 @@ export default function HeroSection() {
       {/* 1. Background Image & Fade Layer */}
       <div
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/hero-bg.png')" }}
+        style={{ backgroundImage: "url('/hero-bg.webp')" }}
       >
         {/* Exact gradient overlay: Full width on mobile/tablet for text readability, 70% on desktop */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#0D130622]/95 via-[#333B2A3B]/70 to-transparent w-full lg:w-[70%]"></div>
@@ -27,7 +27,10 @@ export default function HeroSection() {
 
         {/* CTA Button */}
 
-        <Link href="/contact" className="animate-base content-animation bg-[#52B7EC] text-white px-8 py-3 rounded-full font-heading font-semibold text-[14px] shadow-lg hover:brightness-110 transition-all">
+        <Link
+          href="/contact"
+          className="animate-base content-animation bg-[#52B7EC] text-white px-8 py-3 rounded-full font-heading font-semibold text-[14px] shadow-lg hover:brightness-110 transition-all"
+        >
           Get In Touch
         </Link>
       </div>

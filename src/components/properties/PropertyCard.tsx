@@ -32,7 +32,7 @@ export default function PropertyCard({
       <div className="flex flex-col flex-grow px-1">
         <div className="flex items-center gap-1.5 text-[#919191] mb-1">
           <img
-            src="/pin.png"
+            src="/pin.webp"
             alt="location"
             className="w-[14px] h-[14px] md:w-[15px] md:h-[15px] object-contain shrink-0"
           />

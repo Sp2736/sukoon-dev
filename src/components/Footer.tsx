@@ -17,7 +17,7 @@ export default function Footer() {
           observer.disconnect();
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.4 }
     );
 
     if (footerRef.current) observer.observe(footerRef.current);
@@ -116,7 +116,7 @@ export default function Footer() {
 
               <div className={`${isVisible ? "animate-base form-animation delay-300" : "opacity-0"}`}>
                 <img
-                  src="/logo-white.png"
+                  src="/logo-white.webp"
                   alt="Sukoon Developer"
                   className="h-[48px] md:h-[56px] w-auto object-contain"
                 />

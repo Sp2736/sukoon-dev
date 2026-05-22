@@ -73,7 +73,7 @@ async function fetchRelatedProperties(category: string, excludeId: string) {
     // 2. We no longer need to filter or slice on the frontend! Just map it to the UI components.
     return data.map((p) => ({
       id: p.public_id,
-      image: p.cover_image || "/sukoon-col.png",
+      image: p.cover_image || "/sukoon-col.webp",
       title: p.title,
       location: p.city || "Gujarat",
       details: p.configuration || "Details on request",
@@ -115,7 +115,7 @@ export default async function PropertyDetailsPage({
   const displayImages =
     property.images && property.images.length > 0
       ? property.images
-      : [property.cover_image || "/sukoon-col.png"];
+      : [property.cover_image || "/sukoon-col.webp"];
 
   return (
     // pt-[140px] guarantees the layout clears the solid white navbar

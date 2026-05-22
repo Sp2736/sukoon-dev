@@ -13,14 +13,14 @@ export default function ContactHero() {
       {/* BACKGROUND LAYERS */}
       {/* ========================================================= */}
 
-      {/* Base Image */}
+      {/* Base Image - Fades in cinematically on load */}
       <img
-        src="/contact-bg.png" // Ensure this image is in your public folder
+        src="/contact-bg.webp" 
         alt="Sukoon Contact"
         className="absolute inset-0 w-full h-full object-cover object-center z-0"
       />
 
-      {/* Dark Gradient Overlay - Heavy on the left, fading completely to the right */}
+      {/* Dark Gradient Overlay */}
       <div className="absolute inset-0 z-[1] bg-gradient-to-r from-[#0B1521]/95 via-[#0B152190]/70 to-transparent" />
 
       {/* ========================================================= */}
@@ -30,17 +30,17 @@ export default function ContactHero() {
       <div className="relative z-10 w-full max-w-[1920px] mx-auto px-6 md:px-16 lg:px-[100px] flex flex-col lg:flex-row justify-between items-start gap-16 lg:gap-8">
         {/* --- LEFT COLUMN: Contact Information --- */}
         <div className="w-full lg:w-[45%] flex flex-col text-white pt-4">
-          <h1 className="font-heading font-bold text-[48px] lg:text-[64px] leading-[1.1] tracking-[-0.02em] mb-[24px]">
+          <h1 className="animate-base main-heading-animation font-heading font-bold text-[48px] lg:text-[64px] leading-[1.1] tracking-[-0.02em] mb-[24px]">
             Let’s Connect
           </h1>
 
-          <p className={`${source.className} font-body font-normal text-[16px] md:text-[18px] text-white/90 leading-[1.6] max-w-[480px] mb-[48px]`}>
+          <p className={`animate-base sub-heading-animation delay-100 ${source.className} font-body font-normal text-[16px] md:text-[18px] text-white/90 leading-[1.6] max-w-[480px] mb-[48px]`}>
             Have questions about properties or investments? Our team is here to
             help you find the right opportunity
           </p>
 
           {/* Contact Details List */}
-          <div className={`${instrument.className} flex flex-col gap-6 font-body text-[16px] text-white/90 mb-[56px]`}>
+          <div className={`animate-base content-animation delay-200 ${instrument.className} flex flex-col gap-6 font-body text-[16px] text-white/90 mb-[56px]`}>
             <a
               href="tel:+919825444603"
               className="flex items-center gap-4 hover:text-[#52B7EC] transition-colors duration-300"
@@ -77,7 +77,7 @@ export default function ContactHero() {
           </div>
 
           {/* Social Links */}
-          <div className="flex flex-col gap-4">
+          <div className="animate-base content-animation delay-300 flex flex-col gap-4">
             <span className={`${instrument.className} font-body font-medium text-[15px] text-white`}>
               Follow Us
             </span>
@@ -138,8 +138,8 @@ export default function ContactHero() {
         </div>
 
         {/* --- RIGHT COLUMN: Minimalist Form Card --- */}
-        <div className="w-full lg:w-[48%] max-w-[600px]">
-          <div className="bg-white rounded-[22px] p-5 md:p-[24px] shadow-2xl">
+        <div className="animate-base form-animation delay-400 w-full lg:w-[48%] max-w-[600px]">
+          <div className="bg-white/95 backdrop-blur-sm rounded-[22px] p-5 md:p-[24px] shadow-2xl">
             <h2 className="font-heading font-semibold text-[#303030] text-[26px] md:text-[26px] mb-[32px]">
               Send Us a Message
             </h2>
@@ -217,7 +217,7 @@ export default function ContactHero() {
               <div className="mt-4 flex justify-start">
                 <button
                   type="submit"
-                  className="bg-[#52B7EC] text-white px-8 py-[14px] rounded-full font-heading font-semibold text-[15px] hover:brightness-110 transition-all duration-300"
+                  className="bg-[#52B7EC] text-white px-8 py-[14px] rounded-full font-heading font-semibold text-[15px] hover:brightness-110 transition-all duration-300 active:scale-95"
                 >
                   Submit Inquiry
                 </button>

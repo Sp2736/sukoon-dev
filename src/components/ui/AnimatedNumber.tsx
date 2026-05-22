@@ -32,13 +32,15 @@ export default function AnimatedNumber({
             if (!startTimestamp) startTimestamp = timestamp;
             const progress = Math.min(
               (timestamp - startTimestamp) / duration,
-              1,
+              1
             );
 
-            // easeOutQuart easing function for a smooth deceleration
-            const easeOut = 1 - Math.pow(1 - progress, 4);
+            // CHANGED: Using a Quadratic ease-out (power of 2). 
+            // This stops the "hanging" effect at the end while remaining smooth.
+            const easeOut = 1 - Math.pow(1 - progress, 2);
 
-            setCount(Math.floor(easeOut * targetNumber));
+            // Use Math.round instead of Math.floor for a slightly smoother final tick
+            setCount(Math.round(easeOut * targetNumber));
 
             if (progress < 1) {
               window.requestAnimationFrame(step);
@@ -50,7 +52,7 @@ export default function AnimatedNumber({
           window.requestAnimationFrame(step);
         }
       },
-      { threshold: 0.3 }, // Start when 30% of the element is visible
+      { threshold: 0.4 }
     );
 
     if (elementRef.current) {

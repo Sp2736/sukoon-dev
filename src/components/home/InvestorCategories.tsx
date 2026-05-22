@@ -3,11 +3,11 @@
 import { useState, useEffect, useRef } from "react";
 
 const categories = [
-  { title: "Residential", image: "/residential.png" },
-  { title: "Commercial", image: "/commercial.png" },
-  { title: "Industrial", image: "/industrial.png" },
-  { title: "Open Land – Agricultural", image: "/agri-land.png" },
-  { title: "Open Land – Non Agricultural", image: "/non-agri-land.png" },
+  { title: "Residential", image: "/residential.webp" },
+  { title: "Commercial", image: "/commercial.webp" },
+  { title: "Industrial", image: "/industrial.webp" },
+  { title: "Open Land – Agricultural", image: "/agri-land.webp" },
+  { title: "Open Land – Non Agricultural", image: "/non-agri-land.webp" },
 ];
 
 export default function InvestmentCategories() {
@@ -22,7 +22,7 @@ export default function InvestmentCategories() {
           observer.disconnect(); // Stop observing once it appears
         }
       },
-      { threshold: 0.3 }, // Triggers when 30% of the section is visible
+      { threshold: 0.4 },
     );
 
     if (sectionRef.current) observer.observe(sectionRef.current);

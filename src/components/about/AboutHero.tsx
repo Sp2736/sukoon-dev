@@ -10,7 +10,7 @@ export default function AboutHero() {
       {/* BACKGROUND IMAGE */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <Image
-          src="/about-hero.png"
+          src="/about-hero.webp"
           alt="Luxury modern villa at night"
           fill
           priority
@@ -22,12 +22,14 @@ export default function AboutHero() {
       {/* CONTENT BLOCK */}
       <div className="relative z-10 w-full max-w-[1400px] px-6 flex flex-col items-center">
         {/* MAIN HEADING */}
-        <h1 className="font-heading text-white font-bold text-5xl md:text-[58px] lg:text-[70px] leading-none tracking-[-1.5px] mb-[30px]">
+        <h1 className="animate-base main-heading-animation font-heading text-white font-bold text-5xl md:text-[58px] lg:text-[70px] leading-none tracking-[-1.5px] mb-[30px]">
           Building Trust in Real Estate
         </h1>
 
         {/* SUBHEADING */}
-        <p className={`${source.className} text-[rgba(255,255,255,0.92)] font-normal text-lg md:text-[14px] lg:text-[18px] leading-[1.5] max-w-[800px]`}>
+        <p
+          className={`${source.className} animate-base sub-heading-animation text-[rgba(255,255,255,0.92)] font-normal text-lg md:text-[14px] lg:text-[18px] leading-[1.5] max-w-[800px]`}
+        >
           We simplify property buying through trust, transparency, and
           expertise.
         </p>

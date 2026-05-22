@@ -1,3 +1,6 @@
+"use client";
+
+import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { Instrument_Sans, Source_Sans_3 } from "next/font/google";
 
@@ -5,8 +8,28 @@ const instrument = Instrument_Sans({ subsets: ["latin"] });
 const source = Source_Sans_3({ subsets: ["latin"] });
 
 export default function VisionAndApproach() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.4 },
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="bg-[#F6F6F6] w-full pt-16 lg:pt-[120px] pb-8 lg:pb-[40px] overflow-hidden">
+    <section
+      ref={sectionRef}
+      className="bg-[#F6F6F6] w-full pt-16 lg:pt-[120px] pb-3 lg:pb-[5px] overflow-hidden"
+    >
       <div className="max-w-[1500px] mx-auto px-5 sm:px-8 lg:px-10">
         {/* =========================
             DESKTOP LAYOUT
@@ -20,7 +43,7 @@ export default function VisionAndApproach() {
             <div className="relative w-full max-w-[780px] aspect-[1.15/1]">
               {/* BIG IMAGE */}
               <div
-                className="
+                className={`
                   absolute
                   left-7
                   top-0
@@ -28,10 +51,11 @@ export default function VisionAndApproach() {
                   h-[70%]
                   rounded-[18px]
                   overflow-hidden
-                "
+                  ${isVisible ? "liquid-reveal delay-200" : "opacity-0"}
+                `}
               >
                 <Image
-                  src="/vision-big.png"
+                  src="/vision-big.webp"
                   alt="Luxury modern villa"
                   fill
                   className="object-cover"
@@ -41,7 +65,7 @@ export default function VisionAndApproach() {
 
               {/* SMALL IMAGE */}
               <div
-                className="
+                className={`
                   absolute
                   right-[-4%]
                   bottom-[25%]
@@ -51,10 +75,11 @@ export default function VisionAndApproach() {
                   overflow-hidden
                   shadow-[0_15px_35px_rgba(0,0,0,0.1),0_4px_10px_rgba(0,0,0,0.05)]
                   z-10
-                "
+                  ${isVisible ? "liquid-reveal delay-600" : "opacity-0"}
+                `}
               >
                 <Image
-                  src="/vision-small.png"
+                  src="/vision-small.webp"
                   alt="Modern commercial facade"
                   fill
                   className="object-cover"
@@ -81,6 +106,8 @@ export default function VisionAndApproach() {
                     text-[#1E1E1E]
                     leading-[0.95]
                     text-[40px]
+                    animate-base
+                    main-heading-animation
                   "
                 >
                   Our Vision & <br />
@@ -96,19 +123,20 @@ export default function VisionAndApproach() {
             {/* CARD 1 */}
             {/* Reduced internal padding and gaps to remove bulk */}
             <div
-              className="
+              className={`
                 bg-[#D9F2FF4D]
                 rounded-[24px]
                 p-[22px_26px]
                 flex
                 items-start
                 gap-5
-              "
+                ${isVisible ? "animate-base content-animation delay-200" : "opacity-0"}
+              `}
             >
               <div className="flex items-center gap-5 shrink-0 pt-1">
                 <div className="relative w-[26px] h-[26px]">
                   <Image
-                    src="/bullet-vision.png"
+                    src="/bullet-vision.webp"
                     alt="Vision Bullet"
                     fill
                     className="object-contain"
@@ -134,7 +162,7 @@ export default function VisionAndApproach() {
 
             {/* CARD 2 */}
             <div
-              className="
+              className={`
                 bg-[#D9F2FF4D]
                 rounded-[24px]
                 p-[22px_26px]
@@ -142,12 +170,13 @@ export default function VisionAndApproach() {
                 items-start
                 gap-5
                 mt-4
-              "
+                ${isVisible ? "animate-base content-animation delay-300" : "opacity-0"}
+              `}
             >
               <div className="flex items-center gap-5 shrink-0 pt-1">
                 <div className="relative w-[26px] h-[26px]">
                   <Image
-                    src="/bullet-approach.png"
+                    src="/bullet-approach.webp"
                     alt="Approach Bullet"
                     fill
                     className="object-contain"
@@ -173,7 +202,9 @@ export default function VisionAndApproach() {
 
             {/* BULLET LIST */}
             {/* Reduced top margin to integrate closer with the cards */}
-            <div className="mt-[32px] ml-2">
+            <div
+              className={`mt-[32px] ml-2 ${isVisible ? "animate-base content-animation delay-400" : "opacity-0"}`}
+            >
               <h4 className="font-heading text-[16px] font-bold text-[#1E1E1E] mb-4">
                 Our approach is built on
               </h4>
@@ -219,9 +250,10 @@ export default function VisionAndApproach() {
                 font-bold
                 text-[#1E1E1E]
                 leading-[0.95]
-
                 text-[42px]
                 lg:text-[52px]
+                animate-base
+                main-heading-animation
               "
             >
               Our Vision & <br />
@@ -234,7 +266,7 @@ export default function VisionAndApproach() {
             <div className="relative w-full aspect-[1.15/1]">
               {/* BIG IMAGE */}
               <div
-                className="
+                className={`
                   absolute
                   left-0
                   top-0
@@ -242,10 +274,11 @@ export default function VisionAndApproach() {
                   h-[72%]
                   rounded-[18px]
                   overflow-hidden
-                "
+                  ${isVisible ? "liquid-reveal delay-200" : "opacity-0"}
+                `}
               >
                 <Image
-                  src="/vision-big.png"
+                  src="/vision-big.webp"
                   alt="Luxury modern villa"
                   fill
                   className="object-cover"
@@ -254,7 +287,7 @@ export default function VisionAndApproach() {
 
               {/* SMALL IMAGE */}
               <div
-                className="
+                className={`
                   absolute
                   right-[3%]
                   bottom-[4%]
@@ -264,10 +297,11 @@ export default function VisionAndApproach() {
                   overflow-hidden
                   shadow-[0_12px_40px_rgba(0,0,0,0.12)]
                   z-10
-                "
+                  ${isVisible ? "liquid-reveal delay-400" : "opacity-0"}
+                `}
               >
                 <Image
-                  src="/vision-small.png"
+                  src="/vision-small.webp"
                   alt="Modern commercial facade"
                   fill
                   className="object-cover"
@@ -281,11 +315,11 @@ export default function VisionAndApproach() {
             {/* LEFT COLUMN */}
             <div className="flex flex-col gap-5">
               {/* CARD 1 */}
-              <div className="bg-[#EEF4F6] rounded-[28px] p-7 flex items-start gap-5">
+              <div className={`bg-[#EEF4F6] rounded-[28px] p-7 flex items-start gap-5 ${isVisible ? "animate-base content-animation delay-200" : "opacity-0"}`}>
                 <div className="flex items-center gap-5 shrink-0 pt-1">
                   <div className="relative w-[28px] h-[28px]">
                     <Image
-                      src="/bullet-vision.png"
+                      src="/bullet-vision.webp"
                       alt="Vision Bullet"
                       fill
                       className="object-contain"
@@ -310,11 +344,11 @@ export default function VisionAndApproach() {
               </div>
 
               {/* CARD 2 */}
-              <div className="bg-[#EEF4F6] rounded-[28px] p-7 flex items-start gap-5">
+              <div className={`bg-[#EEF4F6] rounded-[28px] p-7 flex items-start gap-5 ${isVisible ? "animate-base content-animation delay-300" : "opacity-0"}`}>
                 <div className="flex items-center gap-5 shrink-0 pt-1">
                   <div className="relative w-[28px] h-[28px]">
                     <Image
-                      src="/bullet-approach.png"
+                      src="/bullet-approach.webp"
                       alt="Approach Bullet"
                       fill
                       className="object-contain"
@@ -340,7 +374,7 @@ export default function VisionAndApproach() {
             </div>
 
             {/* RIGHT COLUMN */}
-            <div className="pt-4">
+            <div className={`pt-4 ${isVisible ? "animate-base content-animation delay-400" : "opacity-0"}`}>
               <h4 className="font-heading text-[16px] font-bold text-[#1E1E1E] mb-5">
                 Our approach is built on
               </h4>
@@ -386,10 +420,11 @@ export default function VisionAndApproach() {
                 font-bold
                 text-[#1E1E1E]
                 leading-[0.95]
-
                 text-[40px]
                 md:text-[32px]
                 lg:text-[40px]
+                animate-base
+                main-heading-animation
               "
             >
               Our Vision & <br />
@@ -402,7 +437,7 @@ export default function VisionAndApproach() {
             <div className="relative w-full aspect-[1/1.05]">
               {/* BIG IMAGE */}
               <div
-                className="
+                className={`
                   absolute
                   left-0
                   top-0
@@ -410,10 +445,11 @@ export default function VisionAndApproach() {
                   h-[72%]
                   rounded-[16px]
                   overflow-hidden
-                "
+                  ${isVisible ? "liquid-reveal delay-200" : "opacity-0"}
+                `}              
               >
                 <Image
-                  src="/vision-big.png"
+                  src="/vision-big.webp"
                   alt="Luxury modern villa"
                   fill
                   className="object-cover"
@@ -422,7 +458,7 @@ export default function VisionAndApproach() {
 
               {/* SMALL IMAGE */}
               <div
-                className="
+                className={`
                   absolute
                   right-0
                   bottom-[5%]
@@ -432,10 +468,11 @@ export default function VisionAndApproach() {
                   overflow-hidden
                   shadow-[0_12px_40px_rgba(0,0,0,0.12)]
                   z-10
-                "
+                  ${isVisible ? "liquid-reveal delay-400" : "opacity-0"}
+                `}
               >
                 <Image
-                  src="/vision-small.png"
+                  src="/vision-small.webp"
                   alt="Modern commercial facade"
                   fill
                   className="object-cover"
@@ -447,11 +484,11 @@ export default function VisionAndApproach() {
           {/* CONTENT STACK */}
           <div className="flex flex-col gap-5 mt-12">
             {/* CARD 1 */}
-            <div className="bg-[#EEF4F6] rounded-[24px] p-5 flex flex-col gap-4">
+            <div className={`bg-[#EEF4F6] rounded-[24px] p-5 flex flex-col gap-4 ${isVisible ? "animate-base content-animation delay-200" : "opacity-0"}`}>
               <div className="flex items-center gap-4">
                 <div className="relative w-[24px] h-[24px]">
                   <Image
-                    src="/bullet-vision.png"
+                    src="/bullet-vision.webp"
                     alt="Vision Bullet"
                     fill
                     className="object-contain"
@@ -472,11 +509,11 @@ export default function VisionAndApproach() {
             </div>
 
             {/* CARD 2 */}
-            <div className="bg-[#EEF4F6] rounded-[24px] p-5 flex flex-col gap-4">
+            <div className={`bg-[#EEF4F6] rounded-[24px] p-5 flex flex-col gap-4 ${isVisible ? "animate-base content-animation delay-300" : "opacity-0"}`}>
               <div className="flex items-center gap-4">
                 <div className="relative w-[24px] h-[24px]">
                   <Image
-                    src="/bullet-approach.png"
+                    src="/bullet-approach.webp"
                     alt="Approach Bullet"
                     fill
                     className="object-contain"
@@ -497,8 +534,8 @@ export default function VisionAndApproach() {
             </div>
 
             {/* BULLET LIST */}
-            <div className="pt-2">
-              <h4 className="font-heading text-[15px] font-bold text-[#1E1E1E] mb-5">
+            <div className={`pt-2 ${isVisible ? "animate-base content-animation delay-400" : "opacity-0"}`}>
+              <h4 className="animate-base sub-heading-animation font-heading text-[15px] font-bold text-[#1E1E1E] mb-5">
                 Our approach is built on
               </h4>
 

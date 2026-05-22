@@ -30,7 +30,7 @@ export default function PropertyDetailHero({
   const thumbRefs = useRef<(HTMLImageElement | null)[]>([]);
 
   // Fallback if no images are provided
-  const displayImages = images.length > 0 ? images : ["/sukoon-col.png"];
+  const displayImages = images.length > 0 ? images : ["/sukoon-col.webp"];
 
   // Navigation Logic with Looping
   const nextSlide = () => {
@@ -164,7 +164,7 @@ export default function PropertyDetailHero({
             <div className="flex justify-between items-center py-4 border-b border-[#D9F2FF]">
               <div className="flex items-center gap-3 text-[#919191]">
                 <img
-                  src="/details-type.png"
+                  src="/details-type.webp"
                   alt="Property Type"
                   className="w-[18px] h-[18px] object-contain opacity-80 shrink-0"
                 />
@@ -181,7 +181,7 @@ export default function PropertyDetailHero({
             <div className="flex justify-between items-center py-4 border-b border-[#D9F2FF]">
               <div className="flex items-center gap-3 text-[#919191]">
                 <img
-                  src="/details-area.png"
+                  src="/details-area.webp"
                   alt="Property Type"
                   className="w-[18px] h-[18px] object-contain opacity-80 shrink-0"
                 />{" "}
@@ -196,7 +196,7 @@ export default function PropertyDetailHero({
             <div className="flex justify-between items-center py-4 border-b border-[#D9F2FF]">
               <div className="flex items-center gap-3 text-[#919191]">
                 <img
-                  src="/details-location.png"
+                  src="/details-location.webp"
                   alt="Property Type"
                   className="w-[18px] h-[18px] object-contain opacity-80 shrink-0"
                 />{" "}
@@ -211,7 +211,7 @@ export default function PropertyDetailHero({
             <div className="flex justify-between items-center py-4 border-b border-[#D9F2FF]">
               <div className="flex items-center gap-3 text-[#919191]">
                 <img
-                  src="/details-price.png"
+                  src="/details-price.webp"
                   alt="Property Type"
                   className="w-[18px] h-[18px] object-contain opacity-80 shrink-0"
                 />{" "}
@@ -226,7 +226,7 @@ export default function PropertyDetailHero({
             <div className="flex justify-between items-center py-4 border-b border-[#D9F2FF]">
               <div className="flex items-center gap-3 text-[#919191]">
                 <img
-                  src="/details-bhk.png"
+                  src="/details-bhk.webp"
                   alt="Property Type"
                   className="w-[18px] h-[18px] object-contain opacity-80 shrink-0"
                 />{" "}
@@ -249,7 +249,7 @@ export default function PropertyDetailHero({
               <div className="flex flex-col items-center gap-2 shrink-0">
                 <div className="w-[50px] h-[50px] rounded-full border border-[#919191]/50 flex items-center justify-center text-[#919191]">
                   <img
-                    src="/amenities-gym.png"
+                    src="/amenities-gym.webp"
                     alt="Gymnasium"
                     className="w-[20px] h-[20px] object-contain opacity-80"
                   />
@@ -262,7 +262,7 @@ export default function PropertyDetailHero({
               <div className="flex flex-col items-center gap-2 shrink-0">
                 <div className="w-[50px] h-[50px] rounded-full border border-[#919191]/50 flex items-center justify-center text-[#919191]">
                   <img
-                    src="/amenities-pool.png"
+                    src="/amenities-pool.webp"
                     alt="Gymnasium"
                     className="w-[20px] h-[20px] object-contain opacity-80"
                   />{" "}
@@ -275,7 +275,7 @@ export default function PropertyDetailHero({
               <div className="flex flex-col items-center gap-2 shrink-0">
                 <div className="w-[50px] h-[50px] rounded-full border border-[#919191]/50 flex items-center justify-center text-[#919191]">
                   <img
-                    src="/amenities-living.png"
+                    src="/amenities-living.webp"
                     alt="Gymnasium"
                     className="w-[20px] h-[20px] object-contain opacity-80"
                   />{" "}
@@ -288,7 +288,7 @@ export default function PropertyDetailHero({
               <div className="flex flex-col items-center gap-2 shrink-0">
                 <div className="w-[50px] h-[50px] rounded-full border border-[#919191]/50 flex items-center justify-center text-[#919191]">
                   <img
-                    src="/amenities-power.png"
+                    src="/amenities-power.webp"
                     alt="Gymnasium"
                     className="w-[20px] h-[20px] object-contain opacity-80"
                   />{" "}
@@ -301,7 +301,7 @@ export default function PropertyDetailHero({
               <div className="flex flex-col items-center gap-2 shrink-0">
                 <div className="w-[50px] h-[50px] rounded-full border border-[#919191]/50 flex items-center justify-center text-[#919191]">
                   <img
-                    src="/amenities-dining.png"
+                    src="/amenities-dining.webp"
                     alt="Gymnasium"
                     className="w-[20px] h-[20px] object-contain opacity-80"
                   />{" "}

@@ -10,21 +10,21 @@ const baseTestimonials = [
     role: "Home Buyer",
     quote:
       "“Finding our dream home felt overwhelming until their team guided us through every step. The process was smooth, transparent, and stress-free.”",
-    avatar: "/person-1.png",
+    avatar: "/person-1.webp",
   },
   {
     name: "Raj Mehta",
     role: "Business Owner",
     quote:
       "“We were looking for a commercial property in a prime location, and they delivered exactly what we needed within our budget.”",
-    avatar: "/person-2.png",
+    avatar: "/person-2.webp",
   },
   {
     name: "Amit Patel",
     role: "Land Investor",
     quote:
       "“Their expertise in agricultural land acquisitions in Gujarat is unmatched. They provided thorough documentation and clear, honest advice from day one.”",
-    avatar: "/person-3.png",
+    avatar: "/person-3.webp",
   },
 ];
 
@@ -49,7 +49,7 @@ export default function Testimonials() {
           observer.disconnect();
         }
       },
-      { threshold: 0.3 },
+      { threshold: 0.4 },
     );
 
     if (sectionRef.current) observer.observe(sectionRef.current);

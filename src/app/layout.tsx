@@ -5,6 +5,11 @@ import Footer from "@/src/components/Footer"
 import "./globals.css";
 import SmoothScroll from "../components/SmoothScroll";
 
+export const metadata: Metadata = {
+  title: "Sukoon Developer",
+  description: "Building homes, developing spaces, and growing land wealth all over Gujarat.",
+};
+
 // Define the fonts and map them to CSS variables
 const instrumentSans = Instrument_Sans({
   subsets: ['latin'],

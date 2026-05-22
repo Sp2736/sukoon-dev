@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useRef, useState, useEffect } from "react";
 import AnimatedNumber from "@/src/components/ui/AnimatedNumber";
 import { Instrument_Sans, Source_Sans_3 } from "next/font/google";
 
@@ -6,6 +8,23 @@ const instrument = Instrument_Sans({ subsets: ["latin"] });
 const source = Source_Sans_3({ subsets: ["latin"] });
 
 export default function WhoWeAre() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.4 },
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   const stats = [
     { number: "500+", label: "Properties Sold" },
     { number: "300+", label: "Happy Clients" },
@@ -14,26 +33,29 @@ export default function WhoWeAre() {
   ];
 
   return (
-    <section className="bg-[#F5F5F5] w-full flex justify-center py-16 px-6 lg:py-[100px] lg:px-[90px]">
+    <section
+      ref={sectionRef}
+      className="bg-[#F5F5F5] w-full flex justify-center py-16 px-6 lg:py-[100px] lg:px-[90px]"
+    >
       <div className="w-full max-w-[1800px] flex flex-col lg:flex-row justify-between items-start gap-12 lg:gap-[10%]">
         {/* LEFT COLUMN */}
         <div className="w-full lg:w-[58%] flex flex-col">
           <h2
-            className={`${instrument.className} text-[#1E1E1E] font-bold text-[32px] md:text-[36px] lg:text-[38px] leading-[1.2] lg:leading-[1.1] tracking-[-1px] mb-4 lg:mb-[40px]`}
+            className={`${instrument.className} ${isVisible ? "animate-base main-heading-animation" : "opacity-0"} text-[#1E1E1E] font-bold text-[32px] md:text-[36px] lg:text-[38px] leading-[1.2] lg:leading-[1.1] tracking-[-1px] mb-4 lg:mb-[40px]`}
           >
             Who We Are
           </h2>
 
           <p
-            className={`${source.className} font-body text-[#2A2A2A] font-normal text-[16px] md:text-[18px] lg:text-[22px] leading-[1.6] lg:leading-[1.7] max-w-[760px] mb-4 lg:mb-[40px]`}
+            className={`${source.className} ${isVisible ? "animate-base sub-heading-animation delay-100" : "opacity-0"} font-body text-[#2A2A2A] font-normal text-[16px] md:text-[18px] lg:text-[22px] leading-[1.6] lg:leading-[1.7] max-w-[760px] mb-4 lg:mb-[40px]`}
           >
-            Sukoon Developers is a real estate consultancy and development firm
+            Sukoon Developer is a real estate consultancy and development firm
             helping individuals and businesses make confident property decisions
             across Gujarat
           </p>
 
           <p
-            className={`${source.className} font-body text-[#2A2A2A] text-opacity-90 font-normal text-[16px] md:text-[18px] lg:text-[22px] leading-[1.6] lg:leading-[1.7] max-w-[760px]`}
+            className={`${source.className} ${isVisible ? "animate-base sub-heading-animation delay-100" : "opacity-0"} font-body text-[#2A2A2A] text-opacity-90 font-normal text-[16px] md:text-[18px] lg:text-[22px] leading-[1.6] lg:leading-[1.7] max-w-[760px]`}
           >
             We specialize in construction, development, redevelopment, and
             property consultation-offering transparent, brokerage-free guidance
@@ -46,12 +68,15 @@ export default function WhoWeAre() {
           <div className="grid grid-cols-2 gap-y-[30px] md:gap-y-[40px] lg:gap-y-[60px]">
             {stats.map((stat, index) => {
               const isLeftColumn = index % 2 === 0;
+              const delayClass = `delay-${(index + 2) * 100}`;
 
               return (
                 <div
                   key={index}
                   className={`relative flex flex-col ${
                     isLeftColumn ? "pr-4 lg:pr-[50px]" : "pl-4 lg:pl-[50px]"
+                  }
+                    ${isVisible ? `animate-base scale-pop-animation ${delayClass}` : "opacity-0"}
                   }`}
                 >
                   {/* Scaled the middle divider line for mobile height */}

@@ -23,7 +23,7 @@ export default function AboutSection() {
         }
       },
       {
-        threshold: 0.3,
+        threshold: 0.4,
       },
     );
 
@@ -87,7 +87,7 @@ export default function AboutSection() {
               ${isVisible ? "animate-base main-heading-animation delay-400" : "opacity-0"}
             `}
           >
-            About Sukoon Developers
+            About Sukoon Developer
           </h2>
 
           {/* Body Text */}
@@ -103,7 +103,7 @@ export default function AboutSection() {
             `}
           >
             <p>
-              Sukoon Developers is a real estate consultancy and development
+              Sukoon Developer is a real estate consultancy and development
               firm helping individuals and businesses make confident property
               decisions across Gujarat
             </p>

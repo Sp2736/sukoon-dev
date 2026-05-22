@@ -4,139 +4,226 @@ import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 
 const highlights = [
-  { title: "Long-Term Returns", icon: "/icon-long-term.png" },
-  { title: "Secure Investment", icon: "/icon-secure.png" },
-  { title: "Prime Locations", icon: "/icon-prime.png" },
-  { title: "Strong Growth Potential", icon: "/icon-growth.png" },
+  { title: "Long-Term Returns", icon: "/icon-long-term.webp" },
+  { title: "Secure Investment", icon: "/icon-secure.webp" },
+  { title: "Prime Locations", icon: "/icon-prime.webp" },
+  { title: "Strong Growth Potential", icon: "/icon-growth.webp" },
 ];
 
 export default function LandOpportunities() {
-  // Logo logic referred from Navbar
   const abbasLogoSrc = "/abbas-logo-cropped.svg";
-  
-  const sectionRef = useRef<HTMLElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-  
+
+  const trackRef = useRef<HTMLDivElement>(null);
+  const stickyRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number>(0);
+  const progressRef = useRef(0);
+
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [trackHeight, setTrackHeight] = useState(0);
+  const [stickyTop, setStickyTop] = useState(0);
+
+  // ── Measure: Top-Locking Strategy ─────────────────────────────────────────
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect(); // Stop observing once it appears
-        }
-      },
-      { threshold: 0.3 }, 
-    );
-  
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
+    const calculate = () => {
+      if (!stickyRef.current) return;
+      const vh = window.innerHeight;
+      const contentHeight = stickyRef.current.scrollHeight;
+
+      // Dynamically set the lock position based on screen size.
+      // On mobile (vh < 768), we lock higher (e.g., 60px) to keep the logo tight.
+      // On desktop, we lock at 80px to accommodate the navbar.
+      const lockPosition = vh < 768 ? 60 : 80;
+      setStickyTop(lockPosition);
+
+      // Increase the runway height specifically for mobile to
+      // prevent the animation from feeling too fast or "scrolling through" too quickly.
+      const runwayMultiplier = vh < 768 ? 6 : 4;
+      setTrackHeight(contentHeight + vh * runwayMultiplier);
+    };
+
+    calculate();
+    window.addEventListener("resize", calculate);
+    return () => window.removeEventListener("resize", calculate);
   }, []);
 
+  // ── Scroll → progress (0→1 over 4×vh after fully visible) ───────────────
+  useEffect(() => {
+    if (!trackHeight) return;
+    const handleScroll = () => {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => {
+        if (!trackRef.current || !stickyRef.current) return;
+
+        const { top } = trackRef.current.getBoundingClientRect();
+        const vh = window.innerHeight;
+
+        // the "locked" phase begins exactly when the track's top reaches 80px.
+        const lockPosition = 80;
+        const animScrolled = lockPosition - top;
+
+        const animTotal = vh * 4;
+
+        // Calculate progress (clamped safely between 0 and 1)
+        const p = Math.max(0, Math.min(1, animScrolled / animTotal));
+
+        if (p !== progressRef.current) {
+          progressRef.current = p;
+          setScrollProgress(p);
+        }
+      });
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      cancelAnimationFrame(rafRef.current);
+    };
+  }, [trackHeight]);
+
+  // ── Animation timeline ───────────────────────────────────────────────────
+  const norm = (p: number, start: number, end: number) =>
+    Math.max(0, Math.min(1, (p - start) / (end - start)));
+
+  const overlayP = norm(scrollProgress, 0.0, 0.22);
+  const headingP = norm(scrollProgress, 0.22, 0.38);
+  const subP = norm(scrollProgress, 0.38, 0.54);
+  const bulletP = (idx: number) =>
+    norm(scrollProgress, 0.54 + idx * 0.05, 0.66 + idx * 0.05);
+  const cardP = norm(scrollProgress, 0.75, 1.0);
+
+  // Reusable style builder — opacity + translateY, fully scroll-driven
+  const revealStyle = (p: number, yOffset = 22): React.CSSProperties => ({
+    opacity: p,
+    transform: `translateY(${(1 - p) * yOffset}px)`,
+    transition: "none",
+  });
+
   return (
-    <section ref={sectionRef} className="relative w-full py-16 lg:py-0 lg:min-h-[800px] flex items-center overflow-hidden bg-white">
-      {/* FIXED: Attached ref={sectionRef} so the observer actually watches this section */}
+    <div
+      ref={trackRef}
+      className="relative w-full"
+      style={{ height: trackHeight ? `${trackHeight}px` : "auto" }}
+    >
+      <section
+        ref={stickyRef}
+        className="sticky w-full py-10 lg:py-0 lg:min-h-[800px] flex items-center overflow-hidden bg-white"
+        style={{ top: `${stickyTop}px` }}
+      >
+        {/* ── BACKGROUND LAYERS ── */}
+        <div
+          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: "url('/land-opportunities-bg.webp')" }}
+        />
+        <div
+          className="absolute inset-0 z-0 bg-white/20"
+          style={{ opacity: overlayP }}
+        />
+        <div
+          className="absolute left-0 inset-y-0 w-full lg:w-[80%] z-0 bg-gradient-to-r from-white via-white/90 to-transparent"
+          style={{ opacity: overlayP }}
+        />
+        <div
+          className="absolute top-0 left-0 w-full h-[80px] z-0 bg-gradient-to-b from-white via-white/30 to-transparent"
+          style={{ opacity: overlayP }}
+        />
+        <div
+          className="absolute bottom-0 left-0 w-full h-[150px] z-0 bg-gradient-to-t from-white via-white/30 to-transparent"
+          style={{ opacity: overlayP }}
+        />
 
-      {/* --- BACKGROUND LAYERS --- */}
-
-      {/* 1. Base Image - Using the 100% reliable Tailwind native 3-second transition */}
-      <div
-        className={`absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-all duration-[3000ms] ease-out ${isVisible ? "opacity-100 blur-0 brightness-100" : "opacity-0 blur-md brightness-75"}`}
-        style={{ backgroundImage: "url('/land-opportunities-bg.png')" }}
-      />
-
-      {/* 2. Overall Image Wash */}
-      <div className="absolute inset-0 z-0 bg-white/20 mix-blend-normal" />
-
-      {/* 3. Left-to-Right Blur */}
-      <div className="absolute left-0 inset-y-0 w-full lg:w-[80%] z-0 bg-gradient-to-r from-white via-white/90 to-transparent" />
-
-      {/* 4. Top & Bottom Seamless Blends */}
-      <div className="absolute top-0 left-0 w-full h-[80px] z-0 bg-gradient-to-b from-white via-white/30 to-transparent" />
-      <div className="absolute bottom-0 left-0 w-full h-[150px] z-0 bg-gradient-to-t from-white via-white/30 to-transparent" />
-
-      {/* --- CONTENT CONTAINER --- */}
-
-      <div className="relative z-10 w-full max-w-[1920px] mx-auto px-6 md:px-16 lg:px-[100px] pt-4 lg:pt-[50px] pb-8 lg:pb-[100px] flex flex-col lg:flex-row justify-between items-start lg:items-end gap-12">
-        {/* LEFT COLUMN: Main Content */}
-        <div className="w-full max-w-[750px] flex flex-col items-start text-left">
-          {/* Abbas Land Vision Logo */}
-          <div className={`mb-8 lg:mb-[40px] flex items-center ${isVisible ? "animate-base content-animation" : "opacity-0"}`}>
-            <div className="flex flex-col">
+        {/* ── CONTENT ── */}
+        <div className="relative z-10 w-full max-w-[1920px] mx-auto px-6 md:px-16 lg:px-[100px] pt-2 lg:pt-[50px] pb-6 lg:pb-[100px] flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 lg:gap-12">
+          {/* LEFT COLUMN */}
+          <div className="w-full max-w-[750px] flex flex-col items-start text-left">
+            {/* Logo */}
+            <div
+              className="mb-6 lg:mb-[40px] flex items-center"
+              style={revealStyle(headingP)}
+            >
               <img
                 src={abbasLogoSrc}
                 alt="Abbas Land Vision"
-                className="h-12 lg:h-15 w-auto object-contain cursor-pointer transition-all duration-300"
+                className="h-10 lg:h-15 w-auto object-contain transition-all duration-300"
               />
             </div>
-          </div>
 
-          {/* Heading */}
-          <h2 className={`font-heading font-bold text-[#1F1F1F] text-[28px] md:text-[36px] lg:text-[42px] leading-[1.2] lg:leading-[1.1] mb-[24px] ${isVisible ? "animate-base main-heading-animation" : "opacity-0"}`}>
-            Invest in High-Potential Land Opportunities
-          </h2>
+            {/* Heading */}
+            <h2
+              className="font-heading font-bold text-[#1F1F1F] text-[26px] md:text-[36px] lg:text-[42px] leading-[1.15] lg:leading-[1.1] mb-[16px] lg:mb-[24px]"
+              style={revealStyle(headingP)}
+            >
+              Invest in High-Potential Land Opportunities
+            </h2>
 
-          {/* Subheading */}
-          <p className={`font-body font-normal text-[#1F1F1F]/80 text-[14px] md:text-[16px] lg:text-[18px] leading-[1.6] mb-8 lg:mb-[40px] max-w-[650px] ${isVisible ? "animate-base sub-heading-animation" : "opacity-0"}`}>
-            Explore agricultural and non-agricultural land options with strong
-            growth potential and long-term returns. Ideal for investors looking
-            to secure future value
-          </p>
+            {/* Subheading */}
+            <p
+              className="font-body font-normal text-[#1F1F1F]/80 text-[14px] md:text-[16px] lg:text-[18px] leading-[1.5] lg:leading-[1.6] mb-6 lg:mb-[40px] max-w-[650px]"
+              style={revealStyle(subP)}
+            >
+              Explore agricultural and non-agricultural land options with strong
+              growth potential and long-term returns. Ideal for investors
+              looking to secure future value
+            </p>
 
-          {/* Button */}
-          <Link
-            href="/contact"
-            className={`inline-block bg-[#52B7EC] text-white px-6 py-3 rounded-full font-heading font-semibold text-[14px] hover:brightness-110 transition-colors mb-12 lg:mb-[60px] ${isVisible ? "animate-base content-animation delay-200" : "opacity-0"}`}
-          >
-            Talk to an Expert
-          </Link>
+            {/* Button */}
+            <Link
+              href="/contact"
+              className="inline-block bg-[#52B7EC] text-white px-6 py-3 rounded-full font-heading font-semibold text-[14px] hover:brightness-110 transition-colors mb-8 lg:mb-[60px]"
+              style={revealStyle(subP)}
+            >
+              Talk to an Expert
+            </Link>
 
-          {/* 2x2 Grid for Highlights */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 lg:gap-y-8 gap-x-12">
-            {highlights.map((item, idx) => {
-              // Creating a staggered delay for the grid items
-              const delayClass = `delay-${(idx + 1) * 100}`;
-              
-              return (
-                <div key={idx} className={`flex items-center gap-4 ${isVisible ? `animate-base content-animation ${delayClass}` : "opacity-0"}`}>
-                  <div className="w-[40px] h-[40px] lg:w-[48px] lg:h-[48px] rounded-full bg-[#52B7EC]/10 flex items-center justify-center shrink-0">
+            {/* Highlights grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 lg:gap-y-8 gap-x-12">
+              {highlights.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center gap-3 lg:gap-4"
+                  style={revealStyle(bulletP(idx))}
+                >
+                  <div className="w-[36px] h-[36px] lg:w-[48px] lg:h-[48px] rounded-full bg-[#52B7EC]/10 flex items-center justify-center shrink-0">
                     <img
                       src={item.icon}
                       alt={item.title}
-                      className="w-[20px] h-[20px] lg:w-[24px] lg:h-[24px] object-contain"
+                      className="w-[18px] h-[18px] lg:w-[24px] lg:h-[24px] object-contain"
                     />
                   </div>
-                  <span className="font-heading font-semibold text-[16px] lg:text-[18px] text-[#1F1F1F]">
+                  <span className="font-heading font-semibold text-[15px] lg:text-[18px] text-[#1F1F1F]">
                     {item.title}
                   </span>
                 </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* RIGHT COLUMN: Floating Collaboration Card */}
-        <div className={`w-full lg:w-auto flex justify-start lg:justify-end mt-4 lg:mt-0 ${isVisible ? "animate-base form-animation delay-500" : "opacity-0"}`}>
-          {/* Smart Glass: Black on Mobile, original White/20 on Desktop */}
-          <div className="bg-black/50 lg:bg-white/20 backdrop-blur-md border border-white/20 lg:border-white/40 rounded-[16px] p-6 max-w-[550px] shadow-lg flex items-start gap-4 transition-colors duration-300">
-            <div className="shrink-0 mt-1">
-              <img
-                src="/location-marker-white.png"
-                alt="location"
-                className="w-[30px] h-[30px] object-contain opacity-95"
-              />
+              ))}
             </div>
+          </div>
 
-            <p className="font-body font-medium text-[16px] lg:text-[19px] text-white leading-[1.6]">
-              In collaboration with{" "}
-              <span className="font-bold">AbbasLandVision</span>, specializing
-              in land investments in{" "}
-              <span className="font-bold">
-                Vadodara (Dabhoi Road, from Kapurai to Dabhoi)
-              </span>
-            </p>
+          {/* RIGHT COLUMN — Glass card */}
+          <div
+            className="w-full lg:w-auto flex justify-start lg:justify-end mt-2 lg:mt-0"
+            style={revealStyle(cardP, 30)}
+          >
+            <div className="bg-black/60 lg:bg-white/20 backdrop-blur-md border border-white/20 lg:border-white/40 rounded-[16px] p-5 lg:p-6 max-w-[550px] shadow-lg flex items-start gap-4">
+              <div className="shrink-0 mt-1">
+                <img
+                  src="/location-marker-white.webp"
+                  alt="location"
+                  className="w-[24px] h-[24px] lg:w-[30px] lg:h-[30px] object-contain opacity-95"
+                />
+              </div>
+              <p className="font-body font-medium text-[14px] lg:text-[19px] text-white leading-[1.5] lg:leading-[1.6]">
+                In collaboration with{" "}
+                <span className="font-bold">AbbasLandVision</span>, specializing
+                in land investments in{" "}
+                <span className="font-bold">
+                  Vadodara (Dabhoi Road, from Kapurai to Dabhoi)
+                </span>
+              </p>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 }
