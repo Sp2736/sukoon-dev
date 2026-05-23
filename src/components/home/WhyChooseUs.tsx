@@ -115,13 +115,13 @@ export default function WhyChooseUs() {
   ];
 
   return (
-    <section className="w-full bg-[#FFFFFF] px-6 md:px-16 lg:px-[100px] pt-16 pb-20 lg:pt-[60px] lg:pb-[100px] overflow-hidden">
+    <section className="w-full bg-[#FFFFFF] px-6 md:px-16 lg:px-[100px] pt-10 pb-10 lg:pt-[60px] lg:pb-[100px] overflow-hidden">
       <div className="w-full max-w-[1720px] mx-auto">
         
         {/* Top Row: Heading and Sub-text */}
         <div 
           ref={headerRef}
-          className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-12 lg:mb-[80px] gap-4 lg:gap-0"
+          className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 lg:mb-[80px] gap-4 lg:gap-0"
         >
           {/* Left Heading */}
           <h2 

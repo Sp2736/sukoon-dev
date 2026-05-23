@@ -8,14 +8,14 @@ const source = Source_Sans_3({ subsets: ["latin"] });
 
 export default function ContactHero() {
   return (
-    <section className="relative w-full min-h-[800px] flex items-center pt-[140px] pb-[80px] overflow-hidden">
+    <section className="relative w-full min-h-[800px] flex items-center pt-[100px] pb-[50px] overflow-hidden">
       {/* ========================================================= */}
       {/* BACKGROUND LAYERS */}
       {/* ========================================================= */}
 
       {/* Base Image - Fades in cinematically on load */}
       <img
-        src="/contact-bg.webp" 
+        src="/contact-bg.webp"
         alt="Sukoon Contact"
         className="absolute inset-0 w-full h-full object-cover object-center z-0"
       />
@@ -42,7 +42,7 @@ export default function ContactHero() {
           {/* Contact Details List */}
           <div className={`animate-base content-animation delay-200 ${instrument.className} flex flex-col gap-6 font-body text-[16px] text-white/90 mb-[56px]`}>
             <a
-              href="tel:+919825444603"
+              href="tel:+917229011331"
               className="flex items-center gap-4 hover:text-[#52B7EC] transition-colors duration-300"
             >
               <Phone
@@ -51,11 +51,11 @@ export default function ContactHero() {
                 fill="currentColor"
                 strokeWidth={0}
               />
-              <span>+91 98254 44603</span>
+              <span>+91 72290 11331</span>
             </a>
 
             <a
-              href="mailto:info@sukoon.in"
+              href="mailto:info@sukoondeveloper.com"
               className="flex items-center gap-4 hover:text-[#52B7EC] transition-colors duration-300"
             >
               <Mail
@@ -64,14 +64,13 @@ export default function ContactHero() {
                 fill="currentColor"
                 strokeWidth={0}
               />
-              <span>info@sukoon.in</span>
+              <span>info@sukoondeveloper.com</span>
             </a>
 
             <div className="flex items-start gap-4">
               <MapPin size={22} className="mt-1 shrink-0 text-white" />
               <span className="leading-[1.6] max-w-[320px]">
-                301, Lotus Business Hub, RC Dutt Road, Alkapuri, Vadodara,
-                Gujarat 390007
+                1/84 - Sarpanch Faliyu, Near Bhathiji Mandir, Hetampura, Vadodara (Dabhoi Road)<br/>390004
               </span>
             </div>
           </div>

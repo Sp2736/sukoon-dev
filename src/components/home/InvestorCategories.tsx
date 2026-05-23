@@ -32,7 +32,7 @@ export default function InvestmentCategories() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full bg-[#FFFFFF] flex flex-col items-center py-16 lg:py-[100px] overflow-hidden"
+      className="relative w-full bg-[#FFFFFF] flex flex-col items-center py-15 lg:py-[80px] overflow-hidden"
     >
       {/* Heading */}
       <h2

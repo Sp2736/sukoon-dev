@@ -121,7 +121,7 @@ export default function WhyInvestorsChooseUs() {
   ];
 
   return (
-    <section className="bg-[#F7F7F7] w-full pt-[80px] lg:pt-[110px] pb-[80px] lg:pb-[120px] px-6 lg:px-[90px]">
+    <section className="bg-[#F7F7F7] w-full pt-[50px] lg:pt-[110px] pb-[50px] lg:pb-[70px] px-6 lg:px-[90px]">
       <div className="max-w-[1700px] mx-auto flex flex-col items-center">
         
         {/* HEADER WRAPPER: Isolated ref so it triggers perfectly */}

@@ -42,7 +42,7 @@ export default function AboutSection() {
     <section
       ref={sectionRef}
       // py-20 gives natural padding on mobile, lg:h-[967px] keeps exact desktop height
-      className="relative w-full bg-white overflow-hidden py-20 lg:py-0 lg:h-[967px] flex items-center"
+      className="relative w-full bg-white overflow-hidden py-10 lg:py-0 lg:h-[720px] flex items-center"
     >
       {/* Background Building Layer */}
       <div className="absolute inset-0 z-0 pointer-events-none flex items-end">

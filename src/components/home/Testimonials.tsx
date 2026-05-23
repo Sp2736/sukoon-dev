@@ -3,44 +3,53 @@
 import { useState, useEffect, useRef } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
-// The 3 exact profiles you requested
-const baseTestimonials = [
+interface Review {
+  id: string;
+  name: string;
+  quote: string;
+}
+
+// 1. Inject the raw data directly (no avatars needed)
+const rawData = [
   {
-    name: "Sarah Chen",
-    role: "Home Buyer",
-    quote:
-      "“Finding our dream home felt overwhelming until their team guided us through every step. The process was smooth, transparent, and stress-free.”",
-    avatar: "/person-1.webp",
-  },
-  {
-    name: "Raj Mehta",
-    role: "Business Owner",
-    quote:
-      "“We were looking for a commercial property in a prime location, and they delivered exactly what we needed within our budget.”",
-    avatar: "/person-2.webp",
-  },
-  {
+    id: "13681203-458b-4f15-9405-80acbdbb4aff",
     name: "Amit Patel",
-    role: "Land Investor",
     quote:
-      "“Their expertise in agricultural land acquisitions in Gujarat is unmatched. They provided thorough documentation and clear, honest advice from day one.”",
-    avatar: "/person-3.webp",
+      "Their expertise in agricultural land acquisitions in Gujarat is unmatched. They provided thorough documentation and clear, honest advice from day one.",
+  },
+  {
+    id: "28ffc523-0d5d-4304-832b-f833d6d71b8d",
+    name: "Raj Mehta",
+    quote:
+      "We were looking for a commercial property in a prime location, and they delivered exactly what we needed within our budget.",
+  },
+  {
+    id: "a499e889-25dc-4278-ac59-acd670cf50a0",
+    name: "Sarah Chen",
+    quote:
+      "Finding our dream home felt overwhelming until their team guided us through every step. The process was smooth, transparent, and stress-free.",
   },
 ];
 
-// We duplicate the 3 items 15 times to create an array of 45 items for the endless loop.
-const infiniteTestimonials = Array(15).fill(baseTestimonials).flat();
+const formattedData: Review[] = rawData.map((item) => ({
+  id: item.id,
+  name: item.name,
+  quote: item.quote,
+}));
+
+// 2. Create the infinite loop array
+const infiniteTestimonials = Array(15).fill(formattedData).flat();
+const initialActiveIndex = Math.floor((15 * formattedData.length) / 2);
 
 export default function Testimonials() {
-  // Start right in the middle of our massive array so the user can click left or right endlessly
-  const [activeIndex, setActiveIndex] = useState(21);
-
-  const sectionRef = useRef<HTMLElement>(null);
+  const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
   const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
 
   const nextSlide = () => setActiveIndex((prev) => prev + 1);
   const prevSlide = () => setActiveIndex((prev) => prev - 1);
 
+  // Handle scroll reveal animation
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -56,12 +65,15 @@ export default function Testimonials() {
     return () => observer.disconnect();
   }, []);
 
+  if (formattedData.length === 0) {
+    return null;
+  }
+
   return (
     <section
       ref={sectionRef}
-      className="relative w-full bg-white py-16 lg:py-[120px] overflow-hidden flex flex-col items-center"
+      className="relative w-full bg-white py-16 lg:pt-[100px] lg:pb-[80px] overflow-hidden flex flex-col items-center"
     >
-      {/* Inject dynamic CSS variables for media-query responsive card widths. */}
       <style
         dangerouslySetInnerHTML={{
           __html: `
@@ -79,12 +91,15 @@ export default function Testimonials() {
 
       {/* Headings Container */}
       <div className="w-full max-w-[800px] mx-auto text-center mb-10 lg:mb-[60px] px-6">
-        {/* Fixed the text-[28 px] typo here */}
-        <h2 className={`font-heading font-bold text-[#1F1F1F] text-[28px] md:text-[32px] lg:text-[38px] leading-[1.2] lg:leading-[1.15] mb-4 lg:mb-[24px] ${isVisible ? "animate-base main-heading-animation" : "opacity-0"}`}>
+        <h2
+          className={`font-heading font-bold text-[#1F1F1F] text-[28px] md:text-[32px] lg:text-[38px] leading-[1.2] lg:leading-[1.15] mb-4 lg:mb-[24px] ${isVisible ? "animate-base main-heading-animation" : "opacity-0"}`}
+        >
           Trusted by Property
           <br className="hidden md:block" /> Buyers & Investors
         </h2>
-        <p className={`font-body font-normal text-[#000000]/70 text-[14px] md:text-[16px] lg:text-[18px] leading-[1.6] ${isVisible ? "animate-base sub-heading-animation" : "opacity-0"}`}>
+        <p
+          className={`font-body font-normal text-[#000000]/70 text-[14px] md:text-[16px] lg:text-[18px] leading-[1.6] ${isVisible ? "animate-base sub-heading-animation" : "opacity-0"}`}
+        >
           Hear from clients who found the right residential, commercial, and
           <br className="hidden md:block" /> land investment opportunities with
           us
@@ -92,12 +107,12 @@ export default function Testimonials() {
       </div>
 
       {/* Carousel Track Container */}
-      <div className={`relative w-full py-4 ${isVisible ? "animate-base content-animation delay-400" : "opacity-0"}`}>
-        {/* Figma-style edge fades */}
+      <div
+        className={`relative w-full py-4 ${isVisible ? "animate-base content-animation delay-400" : "opacity-0"}`}
+      >
         <div className="absolute top-0 bottom-0 left-0 w-[15%] md:w-[25%] lg:w-[30%] bg-gradient-to-r from-white via-white/90 to-transparent z-20 pointer-events-none" />
         <div className="absolute top-0 bottom-0 right-0 w-[15%] md:w-[25%] lg:w-[30%] bg-gradient-to-l from-white via-white/90 to-transparent z-20 pointer-events-none" />
 
-        {/* The Sliding Track */}
         <div
           className="carousel-track relative flex transition-transform duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]"
           style={{
@@ -110,29 +125,16 @@ export default function Testimonials() {
           {infiniteTestimonials.map((test, index) => {
             return (
               <div
-                key={index}
-                // Reduced mobile padding (p-[24px]) so text isn't squashed on small screens
+                key={`${test.id}-${index}`}
                 className="shrink-0 bg-[#F6FAFD] rounded-[20px] p-[24px] md:p-[40px] flex flex-col items-start transition-transform duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]"
                 style={{ width: "var(--card-width)" }}
               >
-                {/* Profile Section */}
-                <div className="flex items-center gap-[16px] mb-4 lg:mb-[24px]">
-                  <img
-                    src={test.avatar}
-                    alt={test.name}
-                    className="w-[40px] h-[40px] md:w-[48px] md:h-[48px] rounded-full object-cover shadow-sm"
-                  />
-                  <div className="flex flex-col text-left">
-                    <h4 className="font-heading font-semibold text-[15px] lg:text-[16px] text-[#1F1F1F]">
-                      {test.name}
-                    </h4>
-                    <p className="font-body font-medium text-[12px] lg:text-[13px] text-[#000000]/50">
-                      {test.role}
-                    </p>
-                  </div>
+                <div className="mb-4 lg:mb-[24px]">
+                  <h4 className="font-heading font-semibold text-[15px] lg:text-[16px] text-[#1F1F1F] text-left">
+                    {test.name}
+                  </h4>
                 </div>
 
-                {/* Quote Text */}
                 <p className="font-body font-normal text-[14px] md:text-[14px] leading-[1.6] lg:leading-[1.7] text-[#1F1F1F]/80 text-left">
                   {test.quote}
                 </p>
@@ -143,10 +145,12 @@ export default function Testimonials() {
       </div>
 
       {/* Navigation Buttons */}
-      <div className={`flex items-center justify-center gap-[16px] mt-[30px] lg:mt-[40px] z-30 relative ${isVisible ? "animate-base content-animation delay-1000" : "opacity-0"}`}>
+      <div
+        className={`flex items-center justify-center gap-[16px] mt-[30px] lg:mt-[40px] z-30 relative ${isVisible ? "animate-base content-animation delay-1000" : "opacity-0"}`}
+      >
         <button
           onClick={prevSlide}
-          className="w-[44px] h-[44px] lg:w-[50px] lg:h-[50px] rounded-full border border-gray-200 bg-white flex items-center justify-center text-[#52B7EC] hover:bg-gray-50 transition-colors active:scale-95"
+          className="w-[44px] h-[44px] lg:w-[50px] lg:h-[50px] rounded-full border border-gray-200 bg-white flex items-center justify-center text-[#52B7EC] hover:bg-gray-50 transition-colors active:scale-95 cursor-pointer"
           aria-label="Previous Testimonial"
         >
           <ArrowLeft size={20} strokeWidth={1.5} />
@@ -154,7 +158,7 @@ export default function Testimonials() {
 
         <button
           onClick={nextSlide}
-          className="w-[44px] h-[44px] lg:w-[50px] lg:h-[50px] rounded-full bg-[#E5F5FD] flex items-center justify-center text-[#52B7EC] hover:brightness-95 transition-all active:scale-95"
+          className="w-[44px] h-[44px] lg:w-[50px] lg:h-[50px] rounded-full bg-[#E5F5FD] flex items-center justify-center text-[#52B7EC] hover:brightness-95 transition-all active:scale-95 cursor-pointer"
           aria-label="Next Testimonial"
         >
           <ArrowRight size={20} strokeWidth={1.5} />

@@ -17,37 +17,36 @@ export default function InvestmentNetwork() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [stickyTop, setStickyTop] = useState(0);
   const [trackHeight, setTrackHeight] = useState(0);
+  
+  // Mounted and mobile states to ensure smooth rendering and avoid SSR hydration mismatch
+  const [isMounted, setIsMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
     const calculate = () => {
       if (!stickyRef.current || !svgWrapRef.current) return;
 
+      if (window.innerWidth < 768) {
+        setIsMobile(true);
+        setTrackHeight(0);
+        setStickyTop(0);
+        return;
+      }
+
+      setIsMobile(false);
       const vh = window.innerHeight;
       const contentHeight = stickyRef.current.scrollHeight;
 
-      // The SVG viewBox is 1920×1080.
-      // Dabhoi pin circle is at cy=940. We want to stop just below it —
-      // so we add a small extra gap (~30px in viewBox units below cy=940).
-      // Target viewBox Y = 970. That's 970/1080 = ~89.8% down the viewBox.
-      // The rendered SVG height in px:
       const svgRenderedHeight =
         svgWrapRef.current.getBoundingClientRect().height;
-      // Pixels from SVG top to our target stop point:
-      const stopFraction = 975 / 1080; // just below Dabhoi circle (cy=940) + small gap
+      const stopFraction = 975 / 1080;
       const stopPxFromSVGTop = svgRenderedHeight * stopFraction;
-      // Pixels from SVG top to content bottom:
-      const svgOffsetTop = svgWrapRef.current.offsetTop; // SVG wrapper top within stickyRef
-      // Total px from stickyRef top to our stop point:
+      const svgOffsetTop = svgWrapRef.current.offsetTop;
       const stopPxFromContentTop = svgOffsetTop + stopPxFromSVGTop;
-      // How much to shift: we want the viewport bottom to land at stopPxFromContentTop
-      // Normal overhang pins viewport bottom at contentHeight.
-      // We want it at stopPxFromContentTop instead.
-      // So top = -(stopPxFromContentTop - vh)
       const adjustedTop = -(stopPxFromContentTop - vh);
 
       setStickyTop(adjustedTop);
-      // Track height: enough for the full content to arrive + 3×vh animation runway
-      // Use contentHeight (not stopPx) so nothing gets cut from layout
       setTrackHeight(contentHeight + vh * 3);
     };
 
@@ -74,6 +73,7 @@ export default function InvestmentNetwork() {
   // ── Scroll → progress ─────────────────────────────────────────────────────
   useEffect(() => {
     if (!trackHeight) return;
+
     const handleScroll = () => {
       cancelAnimationFrame(rafRef.current);
       rafRef.current = requestAnimationFrame(() => {
@@ -82,7 +82,6 @@ export default function InvestmentNetwork() {
 
         const { top } = trackRef.current.getBoundingClientRect();
         const vh = window.innerHeight;
-        const contentH = stickyRef.current.scrollHeight;
         const svgRenderedHeight =
           svgWrapRef.current.getBoundingClientRect().height;
         const stopFraction = 975 / 1080;
@@ -116,6 +115,10 @@ export default function InvestmentNetwork() {
   ];
 
   // ── Animation helpers ─────────────────────────────────────────────────────
+  // If we are on mobile, we bypass the scroll animation logic to instantly render the full scene.
+  // We use `!isMounted` safety fallback to desktop rules so the desktop initial render doesn't flash.
+  const shouldAnimate = isMounted ? !isMobile : true;
+
   const norm = (p: number, start: number, end: number) =>
     Math.max(0, Math.min(1, (p - start) / (end - start)));
 
@@ -123,6 +126,13 @@ export default function InvestmentNetwork() {
     fadeStart: number,
     fadeEnd: number,
   ): React.CSSProperties => {
+    if (!shouldAnimate) {
+      return {
+        opacity: 1,
+        transform: "translateY(0) scale(1)",
+        transition: "none",
+      };
+    }
     const p = norm(scrollProgress, fadeStart, fadeEnd);
     return {
       opacity: p,
@@ -132,6 +142,7 @@ export default function InvestmentNetwork() {
   };
 
   const trailProgress = (() => {
+    if (!shouldAnimate) return 1;
     const seg1 = norm(scrollProgress, 0.08, 0.3) * 0.33;
     const seg2 = norm(scrollProgress, 0.38, 0.62) * 0.34;
     const seg3 = norm(scrollProgress, 0.7, 1.0) * 0.33;
@@ -143,15 +154,15 @@ export default function InvestmentNetwork() {
   return (
     <div
       ref={trackRef}
-      className="relative w-full bg-[#F7F7F7]"
+      className="pt-15 lg:pt-0 relative w-full bg-[#F7F7F7]"
       style={{ height: trackHeight ? `${trackHeight}px` : "auto" }}
     >
       <div
         ref={stickyRef}
-        className="sticky w-full overflow-hidden flex flex-col items-center pt-[3px] lg:pt-[5px]"
-        style={{ top: `${stickyTop}px` }}
+        className={`${trackHeight ? "sticky" : "relative"} w-full overflow-hidden flex flex-col items-center pt-[3px] lg:pt-[5px]`}
+        style={{ top: trackHeight ? `${stickyTop}px` : "auto" }}
       >
-        {/* TOP CONTENT — untouched */}
+        {/* TOP CONTENT */}
         <div className="max-w-[1400px] mx-auto px-6 text-center relative z-20">
           <div
             className={`mx-auto w-[230px] h-[125px] bg-white rounded-[24px] border border-black/5 shadow-[0_6px_18px_rgba(0,0,0,0.04)] flex items-center justify-center ${isTextVisible ? "animate-base scale-pop-animation" : "opacity-0"}`}
@@ -194,193 +205,198 @@ export default function InvestmentNetwork() {
           </div>
         </div>
 
-        {/* SVG MASTER SCENE */}
+        {/* SVG MASTER SCENE (Responsive) */}
         <div
           ref={svgWrapRef}
-          className="relative w-full -mt-[40px] lg:-mt-[100px]"
+          className="relative w-full max-w-[1920px] mx-auto px-4 md:px-0 mt-8 md:-mt-[40px] lg:-mt-[100px] mb-12 md:mb-0"
         >
-          <svg
-            viewBox="0 0 1920 1080"
-            className="w-full h-auto block"
-            preserveAspectRatio="xMidYMid meet"
-          >
-            <defs>
-              <mask id="trail-mask">
-                <rect width="100%" height="100%" fill="black" />
-                <path
-                  d="M2.50067 599.501L34.5007 512.001L92.0007 415.501L170.001 334.001L259.501 256.501L342.501 205.501L398.501 170.001L462.501 126.001L532.001 85.5006L606.501 50.0006L639.001 31.5006L677.501 21.0006L722.001 8.50058L747.001 2.50058"
-                  fill="none"
-                  stroke="white"
-                  strokeWidth="36"
-                  strokeLinecap="round"
-                  pathLength="1"
-                  strokeDasharray="1"
-                  strokeDashoffset={trailOffset}
+          {/* Framed window behavior on mobile, edge-to-edge on desktop */}
+          <div className="w-full overflow-hidden rounded-[20px] md:rounded-none shadow-[0_8px_30px_rgba(0,0,0,0.08)] md:shadow-none bg-stone-200 md:bg-transparent relative">
+            <svg
+              viewBox="0 0 1920 1080"
+              className="w-full h-auto block"
+              preserveAspectRatio="xMidYMid meet"
+            >
+              <defs>
+                <mask id="trail-mask">
+                  <rect width="100%" height="100%" fill="black" />
+                  <path
+                    d="M2.50067 599.501L34.5007 512.001L92.0007 415.501L170.001 334.001L259.501 256.501L342.501 205.501L398.501 170.001L462.501 126.001L532.001 85.5006L606.501 50.0006L639.001 31.5006L677.501 21.0006L722.001 8.50058L747.001 2.50058"
+                    fill="none"
+                    stroke="white"
+                    strokeWidth="36"
+                    strokeLinecap="round"
+                    pathLength="1"
+                    strokeDasharray="1"
+                    strokeDashoffset={trailOffset}
+                  />
+                </mask>
+
+                <filter
+                  id="trailGlow"
+                  x="-50%"
+                  y="-50%"
+                  width="200%"
+                  height="200%"
+                >
+                  <feGaussianBlur stdDeviation="6" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+
+                <linearGradient id="topFade" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#F7F7F7" stopOpacity="1" />
+                  <stop offset="45%" stopColor="#F7F7F7" stopOpacity="0.7" />
+                  <stop offset="100%" stopColor="#F7F7F7" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+
+              <image
+                href="/dabhoi-road.webp"
+                x="0"
+                y="0"
+                width="1920"
+                height="1080"
+                preserveAspectRatio="xMidYMid slice"
+              />
+              
+              {/* Fade only makes sense on desktop where it blends edge-to-edge into the top background */}
+              <rect x="0" y="0" width="1920" height="260" fill="url(#topFade)" className="hidden md:block" />
+
+              <path
+                d="M2.50067 599.501L34.5007 512.001L92.0007 415.501L170.001 334.001L259.501 256.501L342.501 205.501L398.501 170.001L462.501 126.001L532.001 85.5006L606.501 50.0006L639.001 31.5006L677.501 21.0006L722.001 8.50058L747.001 2.50058"
+                fill="none"
+                stroke="white"
+                strokeWidth="4"
+                strokeLinecap="round"
+                strokeDasharray="10 18"
+                mask="url(#trail-mask)"
+                transform="translate(885, 345)"
+              />
+
+              {/* PIN 1 — Dabhoi */}
+              <g style={pinStyle(0.0, 0.08)}>
+                <line
+                  x1="890"
+                  y1="935"
+                  x2="890"
+                  y2="825"
+                  stroke="rgba(255,255,255,0.75)"
+                  strokeWidth="2"
+                  strokeDasharray="6 6"
                 />
-              </mask>
+                <circle cx="890" cy="940" r="8" fill="white" />
+                <rect
+                  x="810"
+                  y="800"
+                  width="160"
+                  height="54"
+                  rx="18"
+                  fill="rgb(143,143,143)"
+                />
+                <image
+                  href="/location-marker-white.webp"
+                  x="833"
+                  y="815"
+                  width="24"
+                  height="24"
+                />
+                <text
+                  x="910"
+                  y="834"
+                  fill="white"
+                  textAnchor="middle"
+                  fontSize="22"
+                  fontFamily="sans-serif"
+                  fontWeight="500"
+                >
+                  Dabhoi
+                </text>
+              </g>
 
-              <filter
-                id="trailGlow"
-                x="-50%"
-                y="-50%"
-                width="200%"
-                height="200%"
-              >
-                <feGaussianBlur stdDeviation="6" result="blur" />
-                <feMerge>
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
+              {/* PIN 2 — Dabhoi Road */}
+              <g style={pinStyle(0.3, 0.38)}>
+                <line
+                  x1="1265"
+                  y1="520"
+                  x2="1265"
+                  y2="370"
+                  stroke="rgba(255,255,255,0.75)"
+                  strokeWidth="2"
+                  strokeDasharray="6 6"
+                />
+                <circle cx="1266" cy="525" r="8" fill="white" />
+                <rect
+                  x="1155"
+                  y="320"
+                  width="220"
+                  height="54"
+                  rx="18"
+                  fill="rgb(143,143,143)"
+                />
+                <image
+                  href="/location-marker-white.webp"
+                  x="1180"
+                  y="335"
+                  width="24"
+                  height="24"
+                />
+                <text
+                  x="1285"
+                  y="355"
+                  fill="white"
+                  textAnchor="middle"
+                  fontSize="22"
+                  fontFamily="sans-serif"
+                  fontWeight="500"
+                >
+                  Dabhoi Road
+                </text>
+              </g>
 
-              <linearGradient id="topFade" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#F7F7F7" stopOpacity="1" />
-                <stop offset="45%" stopColor="#F7F7F7" stopOpacity="0.7" />
-                <stop offset="100%" stopColor="#F7F7F7" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-
-            <image
-              href="/dabhoi-road.webp"
-              x="0"
-              y="0"
-              width="1920"
-              height="1080"
-              preserveAspectRatio="xMidYMid slice"
-            />
-            <rect x="0" y="0" width="1920" height="260" fill="url(#topFade)" />
-
-            <path
-              d="M2.50067 599.501L34.5007 512.001L92.0007 415.501L170.001 334.001L259.501 256.501L342.501 205.501L398.501 170.001L462.501 126.001L532.001 85.5006L606.501 50.0006L639.001 31.5006L677.501 21.0006L722.001 8.50058L747.001 2.50058"
-              fill="none"
-              stroke="white"
-              strokeWidth="4"
-              strokeLinecap="round"
-              strokeDasharray="10 18"
-              mask="url(#trail-mask)"
-              transform="translate(885, 345)"
-            />
-
-            {/* PIN 1 — Dabhoi */}
-            <g style={pinStyle(0.0, 0.08)}>
-              <line
-                x1="890"
-                y1="935"
-                x2="890"
-                y2="825"
-                stroke="rgba(255,255,255,0.75)"
-                strokeWidth="2"
-                strokeDasharray="6 6"
-              />
-              <circle cx="890" cy="940" r="8" fill="white" />
-              <rect
-                x="810"
-                y="800"
-                width="160"
-                height="54"
-                rx="18"
-                fill="rgb(143,143,143)"
-              />
-              <image
-                href="/location-marker-white.webp"
-                x="833"
-                y="815"
-                width="24"
-                height="24"
-              />
-              <text
-                x="910"
-                y="834"
-                fill="white"
-                textAnchor="middle"
-                fontSize="22"
-                fontFamily="sans-serif"
-                fontWeight="500"
-              >
-                Dabhoi
-              </text>
-            </g>
-
-            {/* PIN 2 — Dabhoi Road */}
-            <g style={pinStyle(0.3, 0.38)}>
-              <line
-                x1="1265"
-                y1="520"
-                x2="1265"
-                y2="370"
-                stroke="rgba(255,255,255,0.75)"
-                strokeWidth="2"
-                strokeDasharray="6 6"
-              />
-              <circle cx="1266" cy="525" r="8" fill="white" />
-              <rect
-                x="1155"
-                y="320"
-                width="220"
-                height="54"
-                rx="18"
-                fill="rgb(143,143,143)"
-              />
-              <image
-                href="/location-marker-white.webp"
-                x="1180"
-                y="335"
-                width="24"
-                height="24"
-              />
-              <text
-                x="1285"
-                y="355"
-                fill="white"
-                textAnchor="middle"
-                fontSize="22"
-                fontFamily="sans-serif"
-                fontWeight="500"
-              >
-                Dabhoi Road
-              </text>
-            </g>
-
-            {/* PIN 3 — Kapurai */}
-            <g style={pinStyle(0.62, 0.7)}>
-              <line
-                x1="1640"
-                y1="350"
-                x2="1640"
-                y2="240"
-                stroke="rgba(255,255,255,0.75)"
-                strokeWidth="2"
-                strokeDasharray="6 6"
-              />
-              <circle cx="1640" cy="345" r="8" fill="white" />
-              <rect
-                x="1560"
-                y="185"
-                width="160"
-                height="54"
-                rx="18"
-                fill="rgb(143,143,143)"
-              />
-              <image
-                href="/location-marker-white.webp"
-                x="1582"
-                y="200"
-                width="24"
-                height="24"
-              />
-              <text
-                x="1656"
-                y="220"
-                fill="white"
-                textAnchor="middle"
-                fontSize="22"
-                fontFamily="sans-serif"
-                fontWeight="500"
-              >
-                Kapurai
-              </text>
-            </g>
-          </svg>
+              {/* PIN 3 — Kapurai */}
+              <g style={pinStyle(0.62, 0.7)}>
+                <line
+                  x1="1640"
+                  y1="350"
+                  x2="1640"
+                  y2="240"
+                  stroke="rgba(255,255,255,0.75)"
+                  strokeWidth="2"
+                  strokeDasharray="6 6"
+                />
+                <circle cx="1640" cy="345" r="8" fill="white" />
+                <rect
+                  x="1560"
+                  y="185"
+                  width="160"
+                  height="54"
+                  rx="18"
+                  fill="rgb(143,143,143)"
+                />
+                <image
+                  href="/location-marker-white.webp"
+                  x="1582"
+                  y="200"
+                  width="24"
+                  height="24"
+                />
+                <text
+                  x="1656"
+                  y="220"
+                  fill="white"
+                  textAnchor="middle"
+                  fontSize="22"
+                  fontFamily="sans-serif"
+                  fontWeight="500"
+                >
+                  Kapurai
+                </text>
+              </g>
+            </svg>
+          </div>
         </div>
       </div>
     </div>
