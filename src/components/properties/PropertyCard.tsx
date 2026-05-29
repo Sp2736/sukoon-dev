@@ -2,13 +2,14 @@ import { MapPin, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 interface PropertyCardProps {
-  id: string; // We added the ID prop for routing
-  // category: string;
+  id: string;
   image: string;
   title: string;
   location: string;
   details: string;
   price: string;
+  isVisible?: boolean;
+  index?: number;
 }
 
 export default function PropertyCard({
@@ -18,10 +19,27 @@ export default function PropertyCard({
   location,
   details,
   price,
+  isVisible = true,
+  index = 0,
 }: PropertyCardProps) {
+  // Calculate staggered delays based on the card's position
+  const cardDelay = index * 150 + 150; // Wait for the main category title to appear
+  const imageDelay = cardDelay + 150;  // Image fades in after the card bg
+  const contentDelay = cardDelay + 300; // Text loads last inside the card
+
   return (
-    <div className="bg-[#D9F2FF]/50 border border-[#D9F2FF]/30 rounded-[20px] p-[16px] flex flex-col group hover:shadow-lg transition-shadow duration-300">
-      <div className="relative w-full h-[220px] md:h-[250px] xl:h-[270px] rounded-[10px] overflow-hidden shrink-0 mb-3 bg-white">
+    <div
+      style={{ transitionDelay: `${cardDelay}ms` }}
+      className={`bg-[#D9F2FF]/50 border border-[#D9F2FF]/30 rounded-[20px] p-[16px] flex flex-col group hover:shadow-lg transition-all duration-700 ease-out transform ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+      }`}
+    >
+      <div
+        style={{ transitionDelay: `${imageDelay}ms` }}
+        className={`relative w-full h-[220px] md:h-[250px] xl:h-[270px] rounded-[10px] overflow-hidden shrink-0 mb-3 bg-white transition-all duration-700 ease-out ${
+          isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+        }`}
+      >
         <img
           src={image}
           alt={title}
@@ -29,20 +47,24 @@ export default function PropertyCard({
         />
       </div>
 
-      <div className="flex flex-col flex-grow px-1">
+      <div
+        style={{ transitionDelay: `${contentDelay}ms` }}
+        className={`flex flex-col flex-grow px-1 transition-all duration-700 ease-out ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+        }`}
+      >
         <div className="flex items-center gap-1.5 text-[#919191] mb-1">
           <img
             src="/pin.webp"
             alt="location"
             className="w-[14px] h-[14px] md:w-[15px] md:h-[15px] object-contain shrink-0"
           />
-
           <span className="font-body text-[11px] md:text-[13px] leading-[1.6]">
             {location}
           </span>
         </div>
 
-        <h3 className="font-heading font-semibold text-[15px] md:text-[18px] text-[#1F1F1F] leading-[1.4] mb-1">
+        <h3 className="font-heading font-semibold text-[15px] md:text-[18px] text-[#1F1F1F] leading-[1.4] mb-1 line-clamp-1">
           {title}
         </h3>
 
@@ -55,13 +77,11 @@ export default function PropertyCard({
             {price}
           </span>
 
-          {/* Swapped <button> for Next.js <Link> pointing to the dynamic route */}
           <Link
             href={`/properties/${id}`}
-            className="flex items-center gap-1.5 font-heading font-medium text-[11px] md:text-[13px] text-[#1F1F1F] hover:text-[#52B7EC] transition-colors"
+            className="flex items-center justify-center text-black shrink-0 transition-all duration-300 hover:text-sky-700"
           >
-            View Details
-            <ArrowRight size={18} />
+            View Details <ArrowRight/>
           </Link>
         </div>
       </div>

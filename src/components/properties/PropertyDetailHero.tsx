@@ -28,6 +28,9 @@ export default function PropertyDetailHero({
   const [activeIndex, setActiveIndex] = useState(0);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
   const thumbRefs = useRef<(HTMLImageElement | null)[]>([]);
+  
+  // Animation state
+  const [isLoaded, setIsLoaded] = useState(false);
 
   // Fallback if no images are provided
   const displayImages = images.length > 0 ? images : ["/sukoon-col.webp"];
@@ -45,6 +48,9 @@ export default function PropertyDetailHero({
 
   // Effect to calculate the position of the sliding "window"
   useEffect(() => {
+    // Trigger mount animations
+    setIsLoaded(true);
+
     const updateIndicator = () => {
       const activeThumb = thumbRefs.current[activeIndex];
       if (activeThumb) {
@@ -83,15 +89,23 @@ export default function PropertyDetailHero({
 
       <div className="max-w-[1920px] mx-auto flex flex-col lg:flex-row gap-8 lg:gap-12">
         {/* LEFT COLUMN: Image Gallery (Approx 55% width) */}
-        <div className="w-full lg:w-[55%] flex flex-col gap-4">
+        <div 
+          className={`w-full lg:w-[55%] flex flex-col gap-4 transition-all duration-1000 ease-out transform ${
+            isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+          }`}
+        >
           {/* Main Giant Image */}
           <div className="w-[100%] h-[300px] md:h-[400px] lg:h-[450px] rounded-[15px] overflow-hidden bg-gray-100 relative">
-            <img
-              key={activeIndex} // Key forces a re-render for a subtle snap, optional: add fade animations here
-              src={displayImages[activeIndex]}
-              alt={`${title} - Photo ${activeIndex + 1}`}
-              className="w-full h-full object-cover"
-            />
+            {displayImages.map((src, idx) => (
+              <img
+                key={idx}
+                src={src}
+                alt={`${title} - Photo ${idx + 1}`}
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${
+                  idx === activeIndex ? "opacity-100 z-10" : "opacity-0 z-0"
+                }`}
+              />
+            ))}
           </div>
 
           {/* Bottom Thumbnails & Controls */}
@@ -153,15 +167,29 @@ export default function PropertyDetailHero({
             </button>
           </div>
         </div>
+        
         {/* RIGHT COLUMN: Property Details Card (Approx 45% width) */}
-        <div className="w-full lg:w-[45%] bg-[#D9F2FF80] border border-[#D9F2FF]/50 rounded-[16px] p-7 md:p-8 flex flex-col">
-          <h1 className="font-heading font-bold text-[27px] md:text-[38px] text-[#1F1F1F] leading-tight mb-5">
+        <div 
+          className={`w-full lg:w-[45%] bg-[#D9F2FF80] border border-[#D9F2FF]/50 rounded-[16px] p-7 md:p-8 flex flex-col transition-all duration-1000 delay-200 ease-out transform ${
+            isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+          }`}
+        >
+          <h1 
+            className={`font-heading font-bold text-[27px] md:text-[38px] text-[#1F1F1F] leading-tight mb-5 transition-all duration-700 delay-300 ease-out transform ${
+              isLoaded ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"
+            }`}
+          >
             {title}
           </h1>
 
           <div className="flex flex-col w-full">
             {/* Row 1: Property Type */}
-            <div className="flex justify-between items-center py-4 border-b border-[#D9F2FF]">
+            <div 
+              style={{ transitionDelay: "400ms" }}
+              className={`flex justify-between items-center py-4 border-b border-[#D9F2FF] transition-all duration-700 ease-out transform ${
+                isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
+            >
               <div className="flex items-center gap-3 text-[#919191]">
                 <img
                   src="/details-type.webp"
@@ -178,7 +206,12 @@ export default function PropertyDetailHero({
             </div>
 
             {/* Row 2: Area */}
-            <div className="flex justify-between items-center py-4 border-b border-[#D9F2FF]">
+            <div 
+              style={{ transitionDelay: "500ms" }}
+              className={`flex justify-between items-center py-4 border-b border-[#D9F2FF] transition-all duration-700 ease-out transform ${
+                isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
+            >
               <div className="flex items-center gap-3 text-[#919191]">
                 <img
                   src="/details-area.webp"
@@ -193,7 +226,12 @@ export default function PropertyDetailHero({
             </div>
 
             {/* Row 3: Location */}
-            <div className="flex justify-between items-center py-4 border-b border-[#D9F2FF]">
+            <div 
+              style={{ transitionDelay: "600ms" }}
+              className={`flex justify-between items-center py-4 border-b border-[#D9F2FF] transition-all duration-700 ease-out transform ${
+                isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
+            >
               <div className="flex items-center gap-3 text-[#919191]">
                 <img
                   src="/details-location.webp"
@@ -208,7 +246,12 @@ export default function PropertyDetailHero({
             </div>
 
             {/* Row 4: Expected Price */}
-            <div className="flex justify-between items-center py-4 border-b border-[#D9F2FF]">
+            <div 
+              style={{ transitionDelay: "700ms" }}
+              className={`flex justify-between items-center py-4 border-b border-[#D9F2FF] transition-all duration-700 ease-out transform ${
+                isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
+            >
               <div className="flex items-center gap-3 text-[#919191]">
                 <img
                   src="/details-price.webp"
@@ -223,7 +266,12 @@ export default function PropertyDetailHero({
             </div>
 
             {/* Row 5: BHK Type */}
-            <div className="flex justify-between items-center py-4 border-b border-[#D9F2FF]">
+            <div 
+              style={{ transitionDelay: "800ms" }}
+              className={`flex justify-between items-center py-4 border-b border-[#D9F2FF] transition-all duration-700 ease-out transform ${
+                isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
+            >
               <div className="flex items-center gap-3 text-[#919191]">
                 <img
                   src="/details-bhk.webp"
@@ -239,14 +287,24 @@ export default function PropertyDetailHero({
           </div>
 
           {/* Project Amenities */}
-          <div className="mt-3">
+          <div 
+            style={{ transitionDelay: "900ms" }}
+            className={`mt-3 transition-all duration-700 ease-out transform ${
+              isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}
+          >
             <h3 className="font-heading font-bold text-[18px] text-[#1F1F1F] mb-6">
               Project Amenities :
             </h3>
 
             <div className="flex justify-between items-center w-full overflow-x-auto pb-4 md:pb-0 gap-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
               {/* Icon 1 */}
-              <div className="flex flex-col items-center gap-2 shrink-0">
+              <div 
+                style={{ transitionDelay: "1000ms" }}
+                className={`flex flex-col items-center gap-2 shrink-0 transition-all duration-700 ease-out transform ${
+                  isLoaded ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-95"
+                }`}
+              >
                 <div className="w-[50px] h-[50px] rounded-full border border-[#919191]/50 flex items-center justify-center text-[#919191]">
                   <img
                     src="/amenities-gym.webp"
@@ -259,7 +317,12 @@ export default function PropertyDetailHero({
                 </span>
               </div>
               {/* Icon 2 */}
-              <div className="flex flex-col items-center gap-2 shrink-0">
+              <div 
+                style={{ transitionDelay: "1100ms" }}
+                className={`flex flex-col items-center gap-2 shrink-0 transition-all duration-700 ease-out transform ${
+                  isLoaded ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-95"
+                }`}
+              >
                 <div className="w-[50px] h-[50px] rounded-full border border-[#919191]/50 flex items-center justify-center text-[#919191]">
                   <img
                     src="/amenities-pool.webp"
@@ -272,7 +335,12 @@ export default function PropertyDetailHero({
                 </span>
               </div>
               {/* Icon 3 */}
-              <div className="flex flex-col items-center gap-2 shrink-0">
+              <div 
+                style={{ transitionDelay: "1200ms" }}
+                className={`flex flex-col items-center gap-2 shrink-0 transition-all duration-700 ease-out transform ${
+                  isLoaded ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-95"
+                }`}
+              >
                 <div className="w-[50px] h-[50px] rounded-full border border-[#919191]/50 flex items-center justify-center text-[#919191]">
                   <img
                     src="/amenities-living.webp"
@@ -285,7 +353,12 @@ export default function PropertyDetailHero({
                 </span>
               </div>
               {/* Icon 4 */}
-              <div className="flex flex-col items-center gap-2 shrink-0">
+              <div 
+                style={{ transitionDelay: "1300ms" }}
+                className={`flex flex-col items-center gap-2 shrink-0 transition-all duration-700 ease-out transform ${
+                  isLoaded ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-95"
+                }`}
+              >
                 <div className="w-[50px] h-[50px] rounded-full border border-[#919191]/50 flex items-center justify-center text-[#919191]">
                   <img
                     src="/amenities-power.webp"
@@ -298,7 +371,12 @@ export default function PropertyDetailHero({
                 </span>
               </div>
               {/* Icon 5 */}
-              <div className="flex flex-col items-center gap-2 shrink-0">
+              <div 
+                style={{ transitionDelay: "1400ms" }}
+                className={`flex flex-col items-center gap-2 shrink-0 transition-all duration-700 ease-out transform ${
+                  isLoaded ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-95"
+                }`}
+              >
                 <div className="w-[50px] h-[50px] rounded-full border border-[#919191]/50 flex items-center justify-center text-[#919191]">
                   <img
                     src="/amenities-dining.webp"

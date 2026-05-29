@@ -9,6 +9,7 @@ const navLinks = [
   { name: "Home", href: "/" },
   { name: "About Us", href: "/about" },
   { name: "Property listing", href: "/properties" },
+  { name: "Our Works", href: "/works" },
 ];
 
 export default function Navbar() {
@@ -17,11 +18,13 @@ export default function Navbar() {
 
   const pathname = usePathname();
 
-  const isColorLogoPage = pathname.startsWith("/properties");
+  const isColorLogoPage =
+    pathname.startsWith("/properties") || pathname.startsWith("/works");
   const isWhiteTextPage =
     pathname === "/contact" ||
     pathname === "/about" ||
-    pathname.startsWith("/properties");
+    pathname.startsWith("/properties") ||
+    pathname.startsWith("/works");
   const isWhiteLogoPage =
     pathname === "/" || pathname === "/contact" || pathname === "/about";
 
@@ -53,7 +56,7 @@ export default function Navbar() {
   const textColorClass = isScrolled
     ? "text-[#1F1F1F]"
     : isWhiteTextPage
-      ? pathname.startsWith("/properties")
+      ? pathname.startsWith("/properties") || pathname.startsWith("/works")
         ? "text-black"
         : "text-white"
       : "text-[#1F1F1F]";
