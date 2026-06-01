@@ -9,6 +9,7 @@ interface WorkItem {
   location: string;
   image: string;
   type: "image" | "video";
+  category?: string;
 }
 
 interface WorksSectionProps {
@@ -40,13 +41,6 @@ export default function WorksSection({
     return () => observer.disconnect();
   }, []);
 
-  const visibleWorks = works.slice(0, 4);
-  const showViewAll = works.length > 3;
-
-  const viewAllClasses = `font-heading font-semibold text-[15px] md:text-[16px] text-[#52B7EC] hover:text-[#3da0d6] transition-colors duration-300 underline-offset-4 hover:underline relative z-10 flex items-center gap-1 opacity-0 translate-y-4 ease-out transform ${
-    isVisible ? "opacity-100 translate-y-0 duration-700" : ""
-  }`;
-
   return (
     <section
       ref={sectionRef}
@@ -65,30 +59,18 @@ export default function WorksSection({
           >
             {title}
           </h2>
-
-          {showViewAll && (
-            <a
-              href="#"
-              style={{ transitionDelay: "150ms" }}
-              className={viewAllClasses}
-            >
-              View All
-            </a>
-          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10">
-          {visibleWorks.map((work, index) => (
-            <div
-              key={work.id}
-              className={index === 3 ? "hidden md:block lg:hidden" : ""}
-            >
+          {works.map((work, index) => (
+            <div key={work.id}>
               <WorkCard
                 id={work.id}
                 image={work.image}
                 title={work.title}
                 location={work.location}
                 type={work.type}
+                category={work.category}
                 isVisible={isVisible}
                 index={index}
               />

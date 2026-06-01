@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ArrowLeft, ArrowRight, Play } from "lucide-react";
 
 export interface MediaItem {
@@ -25,6 +25,8 @@ export default function WorkDetailHero({
 }: WorkDetailHeroProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
+  const thumbRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const displayMedia =
     media.length > 0
@@ -41,9 +43,45 @@ export default function WorkDetailHero({
     );
   };
 
+  // Mount Effect
   useEffect(() => {
+    // Force the page to strictly start at the very top on load
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     setIsLoaded(true);
   }, []);
+
+  // Effect to calculate the position of the sliding "window"
+  useEffect(() => {
+    const updateIndicator = () => {
+      const activeThumb = thumbRefs.current[activeIndex];
+      if (activeThumb) {
+        setIndicatorStyle({
+          left: activeThumb.offsetLeft,
+          width: activeThumb.offsetWidth,
+        });
+
+        // Smoothly scroll only the horizontal container without triggering a vertical page jump
+        const container = activeThumb.parentElement;
+        if (container) {
+          const thumbCenter = activeThumb.offsetLeft + activeThumb.offsetWidth / 2;
+          const containerCenter = container.offsetWidth / 2;
+          container.scrollTo({
+            left: thumbCenter - containerCenter,
+            behavior: "smooth",
+          });
+        }
+      }
+    };
+
+    // Timeout ensures DOM elements are rendered before calculating widths
+    const timeout = setTimeout(updateIndicator, 50);
+    window.addEventListener("resize", updateIndicator);
+
+    return () => {
+      clearTimeout(timeout);
+      window.removeEventListener("resize", updateIndicator);
+    };
+  }, [activeIndex, displayMedia]);
 
   return (
     <section className="w-full bg-white flex flex-col items-center">
@@ -79,10 +117,10 @@ export default function WorkDetailHero({
         </div>
       </div>
 
-      {/* Main Media Gallery Container */}
-      <div className="w-full px-6 md:px-16 lg:px-24 pb-12">
+      {/* Main Media Gallery Container - Restricted to 1024px max width to fit nicely on screen */}
+      <div className="w-full max-w-[1024px] mx-auto px-6 md:px-12 lg:px-0 pb-12">
         <div
-          className={`relative w-full h-[350px] md:h-[500px] lg:h-[650px] rounded-[24px] overflow-hidden group shadow-lg transition-all duration-1000 ease-out ${
+          className={`relative w-full aspect-video rounded-[24px] overflow-hidden group shadow-lg transition-all duration-1000 ease-out ${
             isLoaded ? "opacity-100 scale-100" : "opacity-0 scale-95"
           }`}
         >
@@ -127,21 +165,34 @@ export default function WorkDetailHero({
           </div>
         </div>
 
-        {/* Thumbnail Selector */}
+        {/* Thumbnail Selector with Sliding Animated Window */}
         {displayMedia.length > 1 && (
           <div
-            className={`flex gap-3 md:gap-4 mt-6 overflow-x-auto pb-4 scrollbar-hide transition-all duration-700 delay-300 ease-out ${
+            className={`relative flex gap-3 md:gap-4 mt-6 overflow-x-auto pb-4 items-center scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] transition-all duration-700 delay-300 ease-out ${
               isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}
           >
+            {/* The Sliding Magic Window / Border */}
+            <div
+              className="absolute top-0 z-10 pointer-events-none transition-all duration-300 ease-out border-[3px] border-[#52B7EC] rounded-[10px] shadow-[0_0_15px_rgba(82,183,236,0.3)] bg-[#52B7EC]/10"
+              style={{
+                left: `${indicatorStyle.left}px`,
+                width: `${indicatorStyle.width}px`,
+                height: "calc(100% - 16px)", // Matches the height of the thumbnail (adjusts for pb-4)
+              }}
+            />
+
             {displayMedia.map((mediaItem, index) => (
-              <button
+              <div
                 key={index}
+                ref={(el) => {
+                  thumbRefs.current[index] = el;
+                }}
                 onClick={() => setActiveIndex(index)}
-                className={`relative w-24 h-16 md:w-32 md:h-20 shrink-0 rounded-[10px] overflow-hidden border-2 transition-all duration-300 ${
+                className={`relative w-24 h-16 md:w-32 md:h-20 shrink-0 rounded-[10px] overflow-hidden cursor-pointer transition-opacity duration-300 ${
                   activeIndex === index
-                    ? "border-[#52B7EC] scale-105"
-                    : "border-transparent opacity-60 hover:opacity-100"
+                    ? "opacity-100"
+                    : "opacity-60 hover:opacity-100"
                 }`}
               >
                 {mediaItem.type === "image" ? (
@@ -157,11 +208,11 @@ export default function WorkDetailHero({
                       className="w-full h-full object-cover opacity-50"
                     />
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <Play className="w-6 h-6 text-white" fill="white" />
+                      <Play className="w-5 h-5 text-white" fill="white" />
                     </div>
                   </div>
                 )}
-              </button>
+              </div>
             ))}
           </div>
         )}

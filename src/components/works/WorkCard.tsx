@@ -7,6 +7,7 @@ interface WorkCardProps {
   title: string;
   location: string;
   type: "image" | "video";
+  category?: string;
   isVisible?: boolean;
   index?: number;
 }
@@ -17,6 +18,7 @@ export default function WorkCard({
   title,
   location,
   type,
+  category,
   isVisible = true,
   index = 0,
 }: WorkCardProps) {
@@ -40,14 +42,25 @@ export default function WorkCard({
             : "opacity-0 translate-y-8 scale-95"
         }`}
       >
-        <img
-          src={image}
-          alt={title}
-          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-        />
+        {/* Thumbnail Image/Video Cover */}
+        {type === "image" ? (
+           <img
+             src={image}
+             alt={title}
+             className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+           />
+        ) : (
+           <div className="w-full h-full relative bg-stone-900 overflow-hidden">
+             <video
+               src={image}
+               className="w-full h-full object-cover opacity-60 transition-transform duration-700 ease-out group-hover:scale-105"
+             />
+           </div>
+        )}
 
+        {/* Video Play Icon Overlay */}
         {type === "video" && (
-          <div className="absolute inset-0 bg-black/20 flex items-center justify-center transition-all group-hover:bg-black/40">
+          <div className="absolute inset-0 bg-black/20 flex items-center justify-center transition-all group-hover:bg-black/40 z-10">
             <div className="w-14 h-14 bg-white/90 rounded-full flex items-center justify-center shadow-lg backdrop-blur-sm group-hover:scale-110 transition-transform">
               <svg
                 className="w-5 h-5 text-[#52B7EC] ml-1"
@@ -83,8 +96,9 @@ export default function WorkCard({
         </h3>
 
         <div className="flex justify-between items-center mt-auto pt-2">
+          {/* Replaced "Site Photo/Video" with Dynamic Category */}
           <span className="font-heading font-bold text-[14px] md:text-[16px] text-[#52B7EC] leading-none">
-            {type === "video" ? "Video Walkthrough" : "Site Photo"}
+            {category || "Our Project"}
           </span>
 
           <div className="w-[32px] h-[32px] md:w-[40px] md:h-[40px] rounded-full bg-white flex justify-center items-center shrink-0 border border-[#D9F2FF] group-hover:bg-[#52B7EC] transition-colors duration-300">
