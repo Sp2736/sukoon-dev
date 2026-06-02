@@ -127,7 +127,7 @@ export default async function PropertyDetailsPage({
       <PropertyDetailHero
         title={property.title}
         propertyType={property.category}
-        area={property.area || "Area details upon request"} // Fallback if area isn't a column in your DB yet
+        area={property.area || "Area details upon request"} 
         location={property.city}
         price={
           property.price
@@ -136,15 +136,15 @@ export default async function PropertyDetailsPage({
         }
         bhk={property.configuration || "Configuration upon request"}
         images={displayImages}
+        amenities={property.amenities} // <-- Successfully passing the data down
       />
 
       {/* 2. Related Property Section */}
-      {/* Only render if there are actually related properties to show */}
       {relatedProperties.length > 0 && (
         <PropertySection
           title="Related Property"
           properties={relatedProperties}
-          isAlternateBg={false} // Keeps the background white as shown in the design
+          isAlternateBg={false} 
         />
       )}
     </main>

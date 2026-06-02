@@ -12,7 +12,24 @@ interface PropertyDetailHeroProps {
   price: string;
   bhk: string;
   images: string[];
+  amenities?: string[]; // Added to accept dynamic amenities
 }
+
+// Map amenity names to their respective icons
+const AMENITY_ICONS: Record<string, string> = {
+  "Prime Location": "/amenities-prime.png",
+  "Schools Nearby": "/amenities-school.png",
+  "Hospitals Nearby": "/amenities-hospital.png",
+  "Gymnasium": "/amenities-gym.webp",
+  "Swimming Pool": "/amenities-pool.webp",
+  "Living Room": "/amenities-living.webp",
+  "Power Backup": "/amenities-power.webp",
+  "Dining Area": "/amenities-dining.webp",
+  // You can add more mappings here for other admin options
+};
+
+// Fallback icon if a specific amenity icon doesn't exist
+const getAmenityIcon = (name: string) => AMENITY_ICONS[name] || "/verified-check.webp";
 
 export default function PropertyDetailHero({
   title,
@@ -22,6 +39,7 @@ export default function PropertyDetailHero({
   price,
   bhk,
   images = [],
+  amenities = [], // Default to empty array
 }: PropertyDetailHeroProps) {
   const router = useRouter();
 
@@ -34,6 +52,13 @@ export default function PropertyDetailHero({
 
   // Fallback if no images are provided
   const displayImages = images.length > 0 ? images : ["/sukoon-col.webp"];
+
+  // Logic for displaying amenities (Mandatory + Dynamic for Residential)
+  const isResidential = propertyType === "Residential";
+  const mandatoryAmenities = ["Prime Location", "Schools Nearby", "Hospitals Nearby"];
+  const displayAmenities = isResidential 
+    ? [...mandatoryAmenities, ...amenities] 
+    : amenities;
 
   // Navigation Logic with Looping
   const nextSlide = () => {
@@ -76,7 +101,7 @@ export default function PropertyDetailHero({
     return () => window.removeEventListener("resize", updateIndicator);
   }, [activeIndex, displayImages]);
 
-  return (
+  return (  
     <section className="w-full bg-white px-6 md:px-16 lg:px-[100px] pb-[80px]">
       {/** TODO: may or may not require this button in the design */}
       {/* <button
@@ -215,7 +240,7 @@ export default function PropertyDetailHero({
               <div className="flex items-center gap-3 text-[#919191]">
                 <img
                   src="/details-area.webp"
-                  alt="Property Type"
+                  alt="Area"
                   className="w-[18px] h-[18px] object-contain opacity-80 shrink-0"
                 />{" "}
                 <span className="font-body text-[14px]">Area (sq ft) :</span>
@@ -235,7 +260,7 @@ export default function PropertyDetailHero({
               <div className="flex items-center gap-3 text-[#919191]">
                 <img
                   src="/details-location.webp"
-                  alt="Property Type"
+                  alt="Location"
                   className="w-[18px] h-[18px] object-contain opacity-80 shrink-0"
                 />{" "}
                 <span className="font-body text-[14px]">Location :</span>
@@ -255,7 +280,7 @@ export default function PropertyDetailHero({
               <div className="flex items-center gap-3 text-[#919191]">
                 <img
                   src="/details-price.webp"
-                  alt="Property Type"
+                  alt="Price"
                   className="w-[18px] h-[18px] object-contain opacity-80 shrink-0"
                 />{" "}
                 <span className="font-body text-[14px]">Expected Price :</span>
@@ -275,7 +300,7 @@ export default function PropertyDetailHero({
               <div className="flex items-center gap-3 text-[#919191]">
                 <img
                   src="/details-bhk.webp"
-                  alt="Property Type"
+                  alt="BHK Type"
                   className="w-[18px] h-[18px] object-contain opacity-80 shrink-0"
                 />{" "}
                 <span className="font-body text-[14px]">BHK Type :</span>
@@ -286,110 +311,42 @@ export default function PropertyDetailHero({
             </div>
           </div>
 
-          {/* Project Amenities */}
-          <div 
-            style={{ transitionDelay: "900ms" }}
-            className={`mt-3 transition-all duration-700 ease-out transform ${
-              isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-          >
-            <h3 className="font-heading font-bold text-[18px] text-[#1F1F1F] mb-6">
-              Project Amenities :
-            </h3>
+          {/* Dynamic Project Amenities */}
+          {displayAmenities.length > 0 && (
+            <div 
+              style={{ transitionDelay: "900ms" }}
+              className={`mt-3 transition-all duration-700 ease-out transform ${
+                isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
+            >
+              <h3 className="font-heading font-bold text-[18px] text-[#1F1F1F] mb-6">
+                Project Amenities :
+              </h3>
 
-            <div className="flex justify-between items-center w-full overflow-x-auto pb-4 md:pb-0 gap-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-              {/* Icon 1 */}
-              <div 
-                style={{ transitionDelay: "1000ms" }}
-                className={`flex flex-col items-center gap-2 shrink-0 transition-all duration-700 ease-out transform ${
-                  isLoaded ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-95"
-                }`}
-              >
-                <div className="w-[50px] h-[50px] rounded-full border border-[#919191]/50 flex items-center justify-center text-[#919191]">
-                  <img
-                    src="/amenities-gym.webp"
-                    alt="Gymnasium"
-                    className="w-[20px] h-[20px] object-contain opacity-80"
-                  />
-                </div>
-                <span className="font-body text-[12px] font-medium text-[#1F1F1F] text-center">
-                  Gymnasium
-                </span>
-              </div>
-              {/* Icon 2 */}
-              <div 
-                style={{ transitionDelay: "1100ms" }}
-                className={`flex flex-col items-center gap-2 shrink-0 transition-all duration-700 ease-out transform ${
-                  isLoaded ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-95"
-                }`}
-              >
-                <div className="w-[50px] h-[50px] rounded-full border border-[#919191]/50 flex items-center justify-center text-[#919191]">
-                  <img
-                    src="/amenities-pool.webp"
-                    alt="Gymnasium"
-                    className="w-[20px] h-[20px] object-contain opacity-80"
-                  />{" "}
-                </div>
-                <span className="font-body text-[12px] font-medium text-[#1F1F1F]">
-                  Swimming Pool
-                </span>
-              </div>
-              {/* Icon 3 */}
-              <div 
-                style={{ transitionDelay: "1200ms" }}
-                className={`flex flex-col items-center gap-2 shrink-0 transition-all duration-700 ease-out transform ${
-                  isLoaded ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-95"
-                }`}
-              >
-                <div className="w-[50px] h-[50px] rounded-full border border-[#919191]/50 flex items-center justify-center text-[#919191]">
-                  <img
-                    src="/amenities-living.webp"
-                    alt="Gymnasium"
-                    className="w-[20px] h-[20px] object-contain opacity-80"
-                  />{" "}
-                </div>
-                <span className="font-body text-[12px] font-medium text-[#1F1F1F]">
-                  Living Room
-                </span>
-              </div>
-              {/* Icon 4 */}
-              <div 
-                style={{ transitionDelay: "1300ms" }}
-                className={`flex flex-col items-center gap-2 shrink-0 transition-all duration-700 ease-out transform ${
-                  isLoaded ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-95"
-                }`}
-              >
-                <div className="w-[50px] h-[50px] rounded-full border border-[#919191]/50 flex items-center justify-center text-[#919191]">
-                  <img
-                    src="/amenities-power.webp"
-                    alt="Gymnasium"
-                    className="w-[20px] h-[20px] object-contain opacity-80"
-                  />{" "}
-                </div>
-                <span className="font-body text-[12px] font-medium text-[#1F1F1F]">
-                  Power Backup
-                </span>
-              </div>
-              {/* Icon 5 */}
-              <div 
-                style={{ transitionDelay: "1400ms" }}
-                className={`flex flex-col items-center gap-2 shrink-0 transition-all duration-700 ease-out transform ${
-                  isLoaded ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-95"
-                }`}
-              >
-                <div className="w-[50px] h-[50px] rounded-full border border-[#919191]/50 flex items-center justify-center text-[#919191]">
-                  <img
-                    src="/amenities-dining.webp"
-                    alt="Gymnasium"
-                    className="w-[20px] h-[20px] object-contain opacity-80"
-                  />{" "}
-                </div>
-                <span className="font-body text-[12px] font-medium text-[#1F1F1F]">
-                  Dining Area
-                </span>
+              <div className="flex justify-start items-start items-center w-full overflow-x-auto pb-4 md:pb-0 gap-6 md:gap-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                {displayAmenities.map((amenity, idx) => (
+                  <div 
+                    key={idx}
+                    style={{ transitionDelay: `${1000 + (idx * 100)}ms` }}
+                    className={`flex flex-col items-center gap-2 shrink-0 transition-all duration-700 ease-out transform ${
+                      isLoaded ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-95"
+                    }`}
+                  >
+                    <div className="w-[50px] h-[50px] rounded-full border border-[#919191]/50 flex items-center justify-center text-[#919191]">
+                      <img
+                        src={getAmenityIcon(amenity)}
+                        alt={amenity}
+                        className="w-[20px] h-[20px] object-contain opacity-80"
+                      />
+                    </div>
+                    <span className="font-body text-[12px] font-medium text-[#1F1F1F] text-center max-w-[70px] leading-tight">
+                      {amenity}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </section>
