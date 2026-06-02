@@ -17,6 +17,7 @@ interface SinglePropertyData {
   description?: string;
   cover_image: string;
   images: string[];
+  amenities?: string[];
 }
 
 // --- Fetch Functions ---
@@ -77,6 +78,8 @@ async function fetchRelatedProperties(category: string, excludeId: string) {
       title: p.title,
       location: p.city || "Gujarat",
       details: p.configuration || "Details on request",
+      category: p.category, // <-- Map Category
+      amenities: p.amenities, // <-- Map Amenities
       price: p.price
         ? `₹ ${p.price.toLocaleString("en-IN")}`
         : "Price on Request",
