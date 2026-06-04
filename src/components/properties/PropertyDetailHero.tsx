@@ -22,10 +22,15 @@ const AMENITY_ICONS: Record<string, string> = {
   "Hospitals Nearby": "/amenities-hospital.png",
   "Gymnasium": "/amenities-gym.webp",
   "Swimming Pool": "/amenities-pool.webp",
+  "Clubhouse": "/amenities-clubhouse.webp",
+  "Children Park": "/amenities-park.webp",
   "Living Room": "/amenities-living.webp",
   "Power Backup": "/amenities-power.webp",
   "Dining Area": "/amenities-dining.webp",
-  // You can add more mappings here for other admin options
+  "Security": "/amenities-security.webp",
+  "Parking": "/amenities-parking.webp",
+  "Intercom": "/amenities-intercom.webp",
+  "Maintenance Staff": "/amenities-staff.webp",
 };
 
 // Fallback icon if a specific amenity icon doesn't exist
@@ -103,15 +108,6 @@ export default function PropertyDetailHero({
 
   return (  
     <section className="w-full bg-white px-6 md:px-16 lg:px-[100px] pb-[80px]">
-      {/** TODO: may or may not require this button in the design */}
-      {/* <button
-        onClick={() => router.back()}
-        className="w-fit mb-2 flex items-center gap-2 px-4 py-2 rounded-[10px] border border-[#D9F2FF] bg-white text-[#1F1F1F] font-body text-[14px] hover:bg-[#D9F2FF40] transition-all"
-      >
-        <ArrowLeft size={16} />
-        Go Back
-      </button> */}
-
       <div className="max-w-[1920px] mx-auto flex flex-col lg:flex-row gap-8 lg:gap-12">
         {/* LEFT COLUMN: Image Gallery (Approx 55% width) */}
         <div 
@@ -315,15 +311,15 @@ export default function PropertyDetailHero({
           {displayAmenities.length > 0 && (
             <div 
               style={{ transitionDelay: "900ms" }}
-              className={`mt-3 transition-all duration-700 ease-out transform ${
+              className={`mt-4 transition-all duration-700 ease-out transform ${
                 isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               }`}
             >
-              <h3 className="font-heading font-bold text-[18px] text-[#1F1F1F] mb-6">
+              <h3 className="font-heading font-bold text-[18px] text-[#1F1F1F] mb-5">
                 Project Amenities :
               </h3>
 
-              <div className="flex justify-start items-start items-center w-full overflow-x-auto pb-4 md:pb-0 gap-6 md:gap-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+              <div className="flex flex-wrap justify-start items-start w-full gap-y-6 gap-x-4 md:gap-x-4.5">
                 {displayAmenities.map((amenity, idx) => (
                   <div 
                     key={idx}
@@ -332,14 +328,15 @@ export default function PropertyDetailHero({
                       isLoaded ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-95"
                     }`}
                   >
-                    <div className="w-[50px] h-[50px] rounded-full border border-[#919191]/50 flex items-center justify-center text-[#919191]">
+                    <div className="w-[45px] h-[45px] md:w-[50px] md:h-[50px] rounded-full border border-[#919191]/50 flex items-center justify-center text-[#919191] bg-white/30">
                       <img
                         src={getAmenityIcon(amenity)}
                         alt={amenity}
-                        className="w-[20px] h-[20px] object-contain opacity-80"
+                        className="w-[18px] h-[18px] md:w-[20px] md:h-[20px] object-contain opacity-80"
                       />
                     </div>
-                    <span className="font-body text-[12px] font-medium text-[#1F1F1F] text-center max-w-[70px] leading-tight">
+                    {/* Fixed max-width ensures items don't take up too much horizontal space */}
+                    <span className="font-body text-[11px] md:text-[12px] font-medium text-[#1F1F1F] text-center w-full max-w-[65px] md:max-w-[70px] leading-tight">
                       {amenity}
                     </span>
                   </div>

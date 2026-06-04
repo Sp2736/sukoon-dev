@@ -89,7 +89,7 @@ export default async function WorksPage() {
 
   return (
     <main className="w-full bg-white flex flex-col min-h-screen pt-[90px]">
-      {/* Header Section */}
+      {/* Header Section
       <div className="w-full flex justify-center py-12 md:py-16 px-6 md:px-16 lg:px-24 bg-white border-b border-stone-100">
         <div className="w-full flex flex-col">
           <h1 className="font-heading font-bold text-3xl md:text-5xl text-stone-900 tracking-tight">
@@ -102,7 +102,7 @@ export default async function WorksPage() {
             every step.
           </p>
         </div>
-      </div>
+      </div> */}
 
       {/* Grouped Sections dynamically rendering based on Database data */}
       {sections.map((section, index) => (
