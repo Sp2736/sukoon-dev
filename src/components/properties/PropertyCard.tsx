@@ -65,7 +65,7 @@ export default function PropertyCard({
   return (
     <div
       style={{ transitionDelay: isVisible ? `${cardDelay}ms` : "0ms" }}
-      className={`bg-[#D9F2FF]/50 border border-[#D9F2FF]/30 rounded-[20px] p-[16px] flex flex-col group hover:shadow-lg transition-all duration-700 ease-out transform ${
+      className={`bg-[#d9f2ffd8] border border-[#D9F2FF]/30 rounded-[20px] p-[16px] flex flex-col group hover:shadow-lg transition-all duration-700 ease-out transform ${
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
       }`}
     >
@@ -139,7 +139,6 @@ export default function PropertyCard({
             ))}
 
             {/* Dynamic Added Amenities */}
-            {/* We can show more now (e.g., 4) since icons take up less space! */}
             {amenities.slice(0, 4).map((amenity, idx) => (
               <div
                 key={`admin-${idx}`}

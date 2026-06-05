@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import WorksSection from "@/src/components/works/WorksSection";
+import AnimatedBackground from "@/src/components/ui/AnimatedBackground";
 
 // Revalidate the page every 60 seconds (ISR)
 export const revalidate = 60;
@@ -58,12 +59,11 @@ async function fetchWorks() {
 export default async function WorksPage() {
   const works = await fetchWorks();
 
-  // Dynamically group works based on their status (e.g., "Ongoing", "Completed")
+  // Dynamically group works based on their status
   const groupedData = works.reduce((acc, work) => {
     const group = work.status || "Our Projects";
     if (!acc[group]) acc[group] = [];
     
-    // Grab the first uploaded media item for the thumbnail
     const firstMedia = work.media && work.media.length > 0 ? work.media[0] : null;
     
     acc[group].push({
@@ -78,31 +78,16 @@ export default async function WorksPage() {
     return acc;
   }, {} as Record<string, any[]>);
 
-  // Convert the grouped object into an array for easy rendering
   const sections = Object.entries(groupedData).map(([category, items]) => ({
     category,
     items,
   }));
 
-  // Optional: Sort sections alphabetically so "Completed" and "Ongoing" remain consistent
   sections.sort((a, b) => a.category.localeCompare(b.category));
 
   return (
-    <main className="w-full bg-white flex flex-col min-h-screen pt-[90px]">
-      {/* Header Section
-      <div className="w-full flex justify-center py-12 md:py-16 px-6 md:px-16 lg:px-24 bg-white border-b border-stone-100">
-        <div className="w-full flex flex-col">
-          <h1 className="font-heading font-bold text-3xl md:text-5xl text-stone-900 tracking-tight">
-            Our Works
-          </h1>
-          <p className="font-body text-stone-500 text-sm md:text-base font-medium mt-4 max-w-3xl leading-relaxed">
-            Take a look at the progress of our construction sites, recent
-            structural developments, and our completed landmark projects. We
-            believe in transparency and showcasing our commitment to quality at
-            every step.
-          </p>
-        </div>
-      </div> */}
+    <main className="w-full relative flex flex-col min-h-screen pt-[90px]">
+      <AnimatedBackground />
 
       {/* Grouped Sections dynamically rendering based on Database data */}
       {sections.map((section, index) => (

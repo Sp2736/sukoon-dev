@@ -27,14 +27,11 @@ export default function PropertySection({
 }: PropertySectionProps) {
   const [isVisible, setIsVisible] = useState(false);
   
-  // Track if the cards are in the DOM
   const [isExpanded, setIsExpanded] = useState(false);
-  // Track if the newly added cards should trigger their visibility animation
   const [showExpandedCards, setShowExpandedCards] = useState(false);
   
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Trigger animation when section scrolls into view
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -52,16 +49,12 @@ export default function PropertySection({
 
   const handleToggleExpand = () => {
     if (!isExpanded) {
-      // 1. Mount the elements in the DOM immediately (in hidden state)
       setIsExpanded(true);
-      // 2. Trigger the CSS transition shortly after mount so it animates smoothly
       setTimeout(() => {
         setShowExpandedCards(true);
       }, 50);
     } else {
-      // 1. Trigger the CSS transition to hide them smoothly
       setShowExpandedCards(false);
-      // 2. Wait for the PropertyCard transition (700ms) to finish before removing from DOM
       setTimeout(() => {
         setIsExpanded(false);
       }, 700); 
@@ -78,8 +71,9 @@ export default function PropertySection({
   return (
     <section
       ref={sectionRef}
+      // CHANGED: bg-transparent for default, bg-[#F9FAFB]/60 for alternate rows to let the background show through
       className={`w-full py-[40px] md:py-[50px] px-5 md:px-8 lg:px-[48px] xl:px-[64px] ${
-        isAlternateBg ? "bg-[#F9FAFB]" : "bg-white"
+        isAlternateBg ? "bg-[#F9FAFB]/60" : "bg-transparent"
       } overflow-hidden transition-all duration-700`}
     >
       <div className="w-full flex flex-col">
@@ -107,11 +101,7 @@ export default function PropertySection({
         {/* BOTTOM ROW: The Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 transition-all duration-700">
           {visibleProperties.map((prop, index) => {
-            // First 4 properties use the scroll observer. Newly expanded ones use the button state.
             const cardIsVisible = index < 4 ? isVisible : showExpandedCards;
-            
-            // Reset the animation delay index for newly expanded items so they don't take forever to appear
-            // (e.g., Index 4 -> 0 delay, Index 5 -> 1 delay)
             const animationIndex = index < 4 ? index : index - 4;
 
             return (

@@ -44,9 +44,7 @@ export default function WorksSection({
   return (
     <section
       ref={sectionRef}
-      className={`w-full flex justify-center py-[40px] md:py-[60px] px-6 md:px-16 lg:px-24 overflow-hidden ${
-        isAlternateBg ? "bg-[#F2F8FB]" : "bg-white"
-      }`}
+      className="w-full flex justify-center py-[40px] md:py-[60px] px-6 md:px-16 lg:px-24 overflow-hidden transition-all duration-700 bg-transparent"
     >
       <div className="w-full flex flex-col">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4 overflow-hidden py-2">

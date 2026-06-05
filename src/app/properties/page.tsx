@@ -1,4 +1,5 @@
 import PropertySection from "@/src/components/properties/PropertySection";
+import AnimatedBackground from "@/src/components/ui/AnimatedBackground";
 
 // Next.js config to revalidate the page every 60 seconds
 export const revalidate = 60;
@@ -74,7 +75,9 @@ export default async function PropertiesPage() {
   });
 
   return (
-    <main className="w-full bg-white flex flex-col min-h-screen pt-[90px]">
+    <main className="w-full relative flex flex-col min-h-screen pt-[90px]">
+      <AnimatedBackground />
+      
       {groupedData.map((section, index) => {
         // Only render the section if it actually has properties
         if (section.properties.length === 0) return null;

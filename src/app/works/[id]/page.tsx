@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import WorkDetailHero, {
-  MediaItem,
-} from "@/src/components/works/WorkDetailHero";
+import WorkDetailHero, { MediaItem } from "@/src/components/works/WorkDetailHero";
+import AnimatedBackground from "@/src/components/ui/AnimatedBackground";
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
@@ -50,7 +49,6 @@ async function fetchWorkById(id: string): Promise<ApiWork | null> {
     const json = await res.json();
     const works: ApiWork[] = json.data || [];
 
-    // Find the specific work matching the dynamic URL parameter
     return works.find((w) => w.public_id === id || w.id === id) || null;
   } catch (error) {
     console.error("Error fetching specific work:", error);
@@ -72,7 +70,9 @@ export default async function WorkDetailPage({ params }: PageProps) {
       : [{ url: "/hero-bg.webp", type: "image" }];
 
   return (
-    <main className="w-full bg-white flex flex-col min-h-screen pt-[90px]">
+    <main className="w-full relative flex flex-col min-h-screen pt-[90px]">
+      <AnimatedBackground />
+
       <WorkDetailHero
         title={workData.title}
         category={workData.category || workData.status || "Our Projects"}
@@ -81,7 +81,7 @@ export default async function WorkDetailPage({ params }: PageProps) {
         media={media}
       />
 
-      <div className="px-6 md:px-16 lg:px-24 py-12 max-w-4xl">
+      <div className="px-6 md:px-16 lg:px-24 py-12 max-w-4xl relative z-10">
         <h2 className="text-2xl font-black text-[#1F1F1F] mb-4">
           Project Overview
         </h2>
